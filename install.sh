@@ -60,7 +60,7 @@ install_official_packages() {
     networkmanager seatd \
     pipewire wireplumber \
     xdg-desktop-portal xdg-desktop-portal-wlr \
-    alacrytty fuzzel mako \
+    alacritty fuzzel mako \
     swaybg swayidle swaylock \
     wl-clipboard cliphist \
     polkit-gnome \

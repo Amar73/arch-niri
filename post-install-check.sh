@@ -43,7 +43,7 @@ for f in \
   "$HOME/.ssh/config" \
   "$HOME/.config/niri/config.kdl" \
   "$HOME/.config/niri/conf.d/keymap.xkb" \
-  "$HOME/.config/foot/alacritty.ini" \
+  "$HOME/.config/alacritty/alacritty.toml" \
   "$HOME/.config/waybar/config.jsonc" \
   "$HOME/.config/waybar/style.css" \
   "$HOME/.config/swaylock/config" \
