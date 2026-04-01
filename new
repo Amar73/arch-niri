@@ -1,0 +1,31 @@
+13:58:35 amar@amar224:~/Amar73/arch-niri-noctalia$ make install
+./install.sh
+
+[2026-04-01 13:59:03] Обновление системы
+[sudo] password for amar:
+:: Synchronizing package databases...
+ core is up to date
+ extra                   8.2 MiB  13.8 MiB/s 00:01 100%
+:: Starting full system upgrade...
+ there is nothing to do
+
+[2026-04-01 13:59:15] Установка официальных пакетов
+warning: base-devel-1-2 is up to date -- skipping
+warning: git-2.53.0-1 is up to date -- skipping
+warning: rsync-3.4.1-2 is up to date -- skipping
+warning: curl-8.19.0-1 is up to date -- skipping
+warning: niri-25.11-2 is up to date -- skipping
+warning: waybar-0.15.0-2 is up to date -- skipping
+warning: networkmanager-1.56.0-1 is up to date -- skipping
+warning: seatd-0.9.3-1 is up to date -- skipping
+warning: pipewire-1:1.6.2-1 is up to date -- skipping
+warning: xdg-desktop-portal-1.20.3-2 is up to date -- skipping
+warning: alacritty-0.16.1-1 is up to date -- skipping
+warning: fuzzel-1.14.1-1 is up to date -- skipping
+warning: playerctl-2.4.1-5 is up to date -- skipping
+warning: mesa-1:26.0.3-1 is up to date -- skipping
+warning: vulkan-icd-loader-1.4.341.0-1 is up to date -- skipping
+error: target not found: qt5-compat
+error: target not found: bibata-cursor-theme
+warning: openssh-10.2p1-2 is up to date -- skipping
+make: *** [Makefile:6: install] Error 1
