@@ -109,11 +109,6 @@ window#waybar.hidden {
   padding-left: 4px;
 }
 
-#window:empty {
-  padding: 0;
-  margin: 0;
-  background-color: transparent;
-}
 
 /* --------------------------------------------------------------------------
    Clock
@@ -224,15 +219,6 @@ window#waybar.hidden {
    -------------------------------------------------------------------------- */
 #tray {
   background-color: #313244;
-}
-
-#tray > .passive {
-  -gtk-icon-effect: dim;
-}
-
-#tray > .needs-attention {
-  -gtk-icon-effect: highlight;
-  background-color: #f38ba8;
 }
 
 /* --------------------------------------------------------------------------
