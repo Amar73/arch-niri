@@ -1,4 +1,4 @@
-# Arch Linux + Niri + Waybar v6.3
+# Arch Linux + Niri + Waybar
 
 Bootstrap-репозиторий для чистого Arch Linux.
 Стек: niri (tiling Wayland compositor) + Waybar + Alacritty + Catppuccin Mocha.
