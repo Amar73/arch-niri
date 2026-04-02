@@ -56,11 +56,11 @@ install_official_packages() {
     brightnessctl playerctl \
     grim slurp \
     mesa vulkan-icd-loader \
-    qt6-wayland qt6-svg qt6-multimedia qt5-compat \
+    qt6-wayland qt6-svg qt6-multimedia qt5-wayland \
     qt6ct kvantum nwg-look \
     noto-fonts noto-fonts-cjk noto-fonts-emoji \
     ttf-jetbrains-mono-nerd \
-    adw-gtk-theme papirus-icon-theme bibata-cursor-theme \
+    adw-gtk-theme papirus-icon-theme \
     xwayland-satellite \
     keychain openssh
 }
@@ -77,6 +77,12 @@ add_groups() {
   sudo usermod -aG video,input,seat "$USER" || true
 }
 
+
+install_aur_packages() {
+  log "Установка AUR-пакетов (yay)"
+  # bibata-cursor-theme — только в AUR
+  yay -S --needed --noconfirm bibata-cursor-theme
+}
 
 backup_if_exists() {
   local path="$1"
@@ -157,6 +163,7 @@ main() {
   enable_system_services
   add_groups
   install_yay
+  install_aur_packages
   deploy_files
   enable_user_services
   print_summary

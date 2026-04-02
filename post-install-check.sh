@@ -24,7 +24,8 @@ echo "=== package checks ==="
 for pkg in \
   niri greetd greetd-tuigreet alacritty fuzzel mako waybar swayidle swaylock btop \
   wl-clipboard cliphist xdg-desktop-portal xdg-desktop-portal-wlr \
-  qt6ct kvantum nwg-look noto-fonts papirus-icon-theme bibata-cursor-theme \
+  qt6ct kvantum nwg-look noto-fonts papirus-icon-theme \
+  qt5-wayland \
   keychain openssh; do
   if pacman -Q "$pkg" >/dev/null 2>&1; then
     ok "package: $pkg"
@@ -33,6 +34,13 @@ for pkg in \
   fi
 done
 
+
+echo
+echo "=== AUR packages ==="
+# bibata-cursor-theme устанавливается через yay, pacman -Q его знает после установки
+pacman -Q bibata-cursor-theme >/dev/null 2>&1 \
+  && ok "package: bibata-cursor-theme (AUR)" \
+  || warn "package missing: bibata-cursor-theme — установи: yay -S bibata-cursor-theme"
 
 echo
 echo "=== config files ==="
