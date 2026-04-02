@@ -1,6 +1,6 @@
 SHELL := /usr/bin/env bash
 
-.PHONY: install check check-local sync logs backup dots dots-local validate reload update
+.PHONY: install check check-local sync logs backup dots dots-local validate reload update outputs
 
 install:
 	./install.sh
@@ -34,3 +34,6 @@ reload:
 
 update:
 	./update.sh
+
+outputs:
+	./deploy-outputs.sh

@@ -226,15 +226,6 @@ window#waybar.hidden {
   background-color: #313244;
 }
 
-#tray > .passive {
-  -gtk-icon-effect: dim;
-}
-
-#tray > .needs-attention {
-  -gtk-icon-effect: highlight;
-  background-color: #f38ba8;
-}
-
 /* --------------------------------------------------------------------------
    Power button
    -------------------------------------------------------------------------- */

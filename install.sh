@@ -113,6 +113,10 @@ deploy_files() {
 
   mkdir -p "${HOME}/Pictures"
   deploy_dotfiles
+
+  # Деплой конфига мониторов по hostname
+  log "Деплой конфига мониторов"
+  bash "${ROOT_DIR}/deploy-outputs.sh"
 }
 
 enable_user_services() {

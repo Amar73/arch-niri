@@ -1,47 +1,88 @@
 binds {
+    // -------------------------------------------------------------------------
+    // Приложения
+    // -------------------------------------------------------------------------
     Mod+Return { spawn "alacritty"; }
     Mod+D { spawn "fuzzel"; }
     Mod+Q { close-window; }
     Mod+Shift+E { quit; }
 
-    Mod+Left { focus-column-left; }
+    // -------------------------------------------------------------------------
+    // Навигация по окнам и колонкам
+    // -------------------------------------------------------------------------
+    Mod+Left  { focus-column-left; }
     Mod+Right { focus-column-right; }
-    Mod+Down { focus-window-down; }
-    Mod+Up { focus-window-up; }
+    Mod+Down  { focus-window-down; }
+    Mod+Up    { focus-window-up; }
 
-    Mod+Shift+Left { move-column-left; }
+    Mod+Shift+Left  { move-column-left; }
     Mod+Shift+Right { move-column-right; }
-    Mod+Shift+Down { move-window-down; }
-    Mod+Shift+Up { move-window-up; }
+    Mod+Shift+Down  { move-window-down; }
+    Mod+Shift+Up    { move-window-up; }
 
+    // -------------------------------------------------------------------------
+    // Размер колонок
+    // -------------------------------------------------------------------------
+    Mod+F       { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+C       { center-column; }
+    Mod+R       { switch-preset-column-width; }
+    Mod+Minus   { set-column-width "-10%"; }
+    Mod+Equal   { set-column-width "+10%"; }
+
+    // -------------------------------------------------------------------------
+    // Воркспейсы 1-10 (независимые на каждом мониторе)
+    // Mod+0 = воркспейс 10
+    // -------------------------------------------------------------------------
     Mod+1 { focus-workspace 1; }
     Mod+2 { focus-workspace 2; }
     Mod+3 { focus-workspace 3; }
     Mod+4 { focus-workspace 4; }
     Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+0 { focus-workspace 10; }
 
     Mod+Shift+1 { move-column-to-workspace 1; }
     Mod+Shift+2 { move-column-to-workspace 2; }
     Mod+Shift+3 { move-column-to-workspace 3; }
     Mod+Shift+4 { move-column-to-workspace 4; }
     Mod+Shift+5 { move-column-to-workspace 5; }
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+    Mod+Shift+0 { move-column-to-workspace 10; }
 
-    Mod+F { maximize-column; }
-    Mod+Shift+F { fullscreen-window; }
+    Mod+Page_Up         { focus-workspace-up; }
+    Mod+Page_Down       { focus-workspace-down; }
+    Mod+Shift+Page_Up   { move-column-to-workspace-up; }
+    Mod+Shift+Page_Down { move-column-to-workspace-down; }
 
-    Mod+C { center-column; }
+    // -------------------------------------------------------------------------
+    // Навигация между мониторами
+    // -------------------------------------------------------------------------
+    Mod+Tab       { focus-monitor-next; }
+    Mod+Shift+Tab { focus-monitor-prev; }
 
-    Mod+Minus { set-column-width "-10%"; }
-    Mod+Equal { set-column-width "+10%"; }
+    Mod+Shift+comma  { move-column-to-monitor-left; }
+    Mod+Shift+period { move-column-to-monitor-right; }
 
-    Mod+R { switch-preset-column-width; }
+    // -------------------------------------------------------------------------
+    // Медиаклавиши — закомментированы, раскомментировать если появится
+    // клавиатура с XF86-клавишами
+    // -------------------------------------------------------------------------
+    // XF86AudioRaiseVolume  { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
+    // XF86AudioLowerVolume  { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
+    // XF86AudioMute         { spawn "wpctl" "set-mute"   "@DEFAULT_AUDIO_SINK@" "toggle"; }
+    // XF86MonBrightnessUp   { spawn "brightnessctl" "set" "5%+"; }
+    // XF86MonBrightnessDown { spawn "brightnessctl" "set" "5%-"; }
 
-    XF86AudioRaiseVolume  { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
-    XF86AudioLowerVolume  { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
-    XF86AudioMute         { spawn "wpctl" "set-mute"   "@DEFAULT_AUDIO_SINK@" "toggle"; }
-    XF86MonBrightnessUp   { spawn "brightnessctl" "set" "5%+"; }
-    XF86MonBrightnessDown { spawn "brightnessctl" "set" "5%-"; }
-
+    // -------------------------------------------------------------------------
+    // Утилиты
+    // -------------------------------------------------------------------------
     Mod+V {
         spawn "sh" "-c" "cliphist list | fuzzel --dmenu | cliphist decode | wl-copy"
     }

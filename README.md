@@ -31,18 +31,52 @@ sudo pacman -S --needed git rsync base-devel
 
 `base-devel` нужен для сборки `yay` через `makepkg`.
 
-### 3. SSH-ключ для GitHub (если клонируешь по SSH)
+### 3. SSH-ключ для GitHub
+
+#### Вариант А — есть доступ к интернету напрямую с машины
 
 ```bash
-# Сгенерировать ключ если нет
-ssh-keygen -t ed25519 -C "your@email.com" -f ~/.ssh/id_ed25519
+# Сгенерировать ключ
+ssh-keygen -t ed25519 -C "you@email" -f ~/.ssh/id_ed25519
 
-# Добавить публичный ключ на github.com → Settings → SSH keys
+# Скопировать публичный ключ в буфер
 cat ~/.ssh/id_ed25519.pub
+```
 
+Зайти на github.com → Settings → SSH and GPG keys → New SSH key,
+вставить содержимое публичного ключа, сохранить.
+
+```bash
 # Проверить
 ssh -T git@github.com
-# Ожидаемый ответ: "Hi USERNAME! You've successfully authenticated..."
+# Ожидаемый ответ: "Hi Amar73! You've successfully authenticated..."
+```
+
+#### Вариант Б — через USB-флешку с другого компьютера
+
+Если на новой машине нет браузера или удобного доступа к GitHub:
+
+```bash
+# 1. На новой машине — сгенерировать ключ
+ssh-keygen -t ed25519 -a 100 -C "you@email" -f ~/.ssh/id_ed25519
+
+# 2. Смонтировать USB-флешку (имя устройства узнать через lsblk)
+sudo mkdir -p /mnt/usb
+sudo mount /dev/sdb1 /mnt/usb
+
+# 3. Скопировать публичный ключ на флешку
+cp ~/.ssh/id_ed25519.pub /mnt/usb/id_ed25519.pub
+
+# 4. Размонтировать
+sudo umount /mnt/usb
+
+# 5. Перейти на другой компьютер с браузером
+# Открыть файл id_ed25519.pub с флешки, скопировать содержимое
+# Зайти: github.com → Settings → SSH and GPG keys → New SSH key
+# Вставить ключ, сохранить
+
+# 6. Вернуться на новую машину, проверить
+ssh -T git@github.com
 ```
 
 ### 4. /etc/hosts для SSH-инфраструктуры
@@ -63,12 +97,42 @@ EOF
 ### 5. Клонирование репозитория
 
 ```bash
-git clone git@github.com:YOUR_USERNAME/arch-niri.git ~/Amar73/arch-niri
+git clone git@github.com:Amar73/arch-niri.git ~/Amar73/arch-niri
 cd ~/Amar73/arch-niri
 chmod +x *.sh
 ```
 
-### 6. Проверка до запуска
+### 6. Настройка git (первый раз на новой машине)
+
+После клонирования нужно привязать git к аккаунту — иначе коммиты будут
+без автора и `git push` откажет:
+
+```bash
+git config --global user.email "you@email"
+git config --global user.name "you name"
+
+# Проверить
+git config --list | grep user
+```
+
+Убедиться что remote указывает на правильный репозиторий:
+
+```bash
+git remote -v
+# Ожидаемый вывод:
+# origin  git@github.com:Amar73/arch-niri.git (fetch)
+# origin  git@github.com:Amar73/arch-niri.git (push)
+```
+
+Если remote не настроен — добавить вручную:
+
+```bash
+git remote add origin git@github.com:Amar73/arch-niri.git
+git branch -M main
+git push -u origin main
+```
+
+### 7. Проверка до запуска
 
 ```bash
 # Синтаксис и структура файлов — без pacman/systemctl, работает везде
@@ -105,7 +169,8 @@ make logs     # логи сервисов текущей загрузки
 6. AUR-пакеты: `bibata-cursor-theme`, `qt5-wayland`
 7. `rsync` конфигов в `~/.config/`
 8. Деплой `.bashrc` и `.ssh/config`
-9. Включение user-сервисов: swayidle, cliphist-text, cliphist-images
+9. Деплой конфига мониторов по hostname (`deploy-outputs.sh`)
+10. Включение user-сервисов: swayidle, cliphist-text, cliphist-images
 
 ### Устанавливаемые пакеты
 
@@ -122,7 +187,7 @@ make logs     # логи сервисов текущей загрузки
 | Аудио | `pipewire wireplumber pipewire-pulse pulsemixer` |
 | Видео | `mesa vulkan-icd-loader` |
 | Скриншоты | `grim slurp` |
-| Медиаклавиши | `brightnessctl playerctl` |
+| Медиаклавиши | `brightnessctl playerctl` (про запас) |
 | Qt6 | `qt6-wayland qt6-svg qt6-multimedia qt6ct kvantum` |
 | GTK | `nwg-look adw-gtk-theme` |
 | Иконки | `papirus-icon-theme` |
@@ -149,12 +214,37 @@ make logs     # логи сервисов текущей загрузки
 | `make logs` | Логи всех сервисов текущей сессии |
 | `make backup` | Резервная копия `/etc/greetd`, `~/.config`, `.bashrc`, `.ssh/config` |
 | `make dots-local` | Деплой только `.bashrc` и `.ssh/config` |
+| `make outputs` | Деплой конфига мониторов по hostname |
 | `make validate` | Валидация niri config |
 | `make reload` | Reload niri config без перезапуска |
 
 ---
 
 ## Настройка после установки
+
+### Мониторы
+
+Конфиг мониторов деплоится автоматически по hostname из `files/home/.config/niri/outputs/`.
+Если hostname не совпадает ни с одним файлом — применяется `default.kdl` (auto).
+
+Проверить текущие выходы:
+```bash
+niri msg outputs
+```
+
+Применить вручную:
+```bash
+make outputs
+```
+
+Файлы мониторов в репо:
+
+| Файл | Машина | Мониторы |
+|------|--------|----------|
+| `amar224.kdl` | amar224 | 3× 1920×1080 @ DP-2, DP-3, DP-4 |
+| `amar319.kdl` | amar319 | 2× 1920×1080 @ DVI-I-1, HDMI-A-1 |
+| `amar319-1.kdl` | amar319-1 | 1× 2560×1600 @ DVI-I-2 |
+| `default.kdl` | ноутбуки | auto/preferred |
 
 ### Waybar: раскладка клавиатуры
 
@@ -204,8 +294,13 @@ for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
 | `Mod+Shift+E` | Выйти из niri |
 | `Mod+←→↑↓` | Навигация по колонкам/окнам |
 | `Mod+Shift+←→↑↓` | Перемещение колонок/окон |
-| `Mod+1..5` | Переключение воркспейсов |
-| `Mod+Shift+1..5` | Перенос колонки на воркспейс |
+| `Mod+1..9, Mod+0` | Воркспейсы 1-10 (независимые на каждом мониторе) |
+| `Mod+Shift+1..9, Mod+Shift+0` | Перенос колонки на воркспейс 1-10 |
+| `Mod+Page_Up/Down` | Соседний воркспейс |
+| `Mod+Tab` | Следующий монитор |
+| `Mod+Shift+Tab` | Предыдущий монитор |
+| `Mod+Shift+,` | Перенести окно на монитор влево |
+| `Mod+Shift+.` | Перенести окно на монитор вправо |
 | `Mod+F` | Развернуть колонку |
 | `Mod+Shift+F` | Полноэкранный режим |
 | `Mod+C` | Центрировать колонку |
@@ -214,8 +309,8 @@ for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
 | `Mod+V` | Cliphist picker |
 | `Print` | Скриншот области |
 | `Mod+Print` | Скриншот экрана |
-| `XF86Audio*` | Громкость (wpctl) |
-| `XF86Brightness*` | Яркость (brightnessctl) |
+| `XF86Audio*` | Громкость (wpctl) — закомментировано, раскомментировать в `50-binds.kdl` при появлении медиаклавиш |
+| `XF86Brightness*` | Яркость (brightnessctl) — закомментировано, раскомментировать в `50-binds.kdl` при появлении медиаклавиш |
 
 ---
 
@@ -232,6 +327,8 @@ for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
 - Добавлены пропущенные пакеты: `wireplumber`, `pipewire-pulse`, `pulsemixer`, `jq`, `xdg-desktop-portal-gtk`
 - `need git/rsync` → `install.sh` сам ставит их на чистом Arch
 - `waybar.service enable` → убран (waybar стартует через `niri spawn-at-startup`)
+- CSS-переменные в `waybar/style.css` → прямые hex-значения (GTK CSS не поддерживает `var()`)
+- `#window:empty` и дочерние селекторы `>` → убраны (не поддерживаются GTK CSS)
 - Мёртвая переменная `REPO_URL="${2:-}"` убрана из `bootstrap-dotfiles.sh`
 
 ### Новое
@@ -241,20 +338,24 @@ for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
 | `alacritty/alacritty.toml` | Catppuccin Mocha, beam cursor, 10k scrollback, URL hints |
 | `swaylock/config` | Catppuccin Mocha, согласован с waybar |
 | `waybar/config.jsonc` | niri/workspaces, window, cpu, mem, disk, temp, audio, net, lang |
-| `waybar/style.css` | Catppuccin Mocha CSS, прозрачный фон, pulse-анимации |
+| `waybar/style.css` | Catppuccin Mocha, прямые hex-значения, без CSS-переменных |
 | `cliphist-text.service` | История текстового буфера обмена |
 | `cliphist-images.service` | История буфера изображений |
 | `check-local.sh` + `make check-local` | Синтаксис + структура без pacman/systemctl |
 | `update.sh` + `make update` | Комплексное обновление системы |
+| `deploy-outputs.sh` + `make outputs` | Авто-деплой конфига мониторов по hostname |
+| `niri/outputs/*.kdl` | Конфиги мониторов для amar224, amar319, amar319-1, default |
+| `50-binds.kdl` | Воркспейсы 1-10, навигация между мониторами |
 
 ---
 
 ## Структура репозитория
 
 ```
-arch-niri-waybar/
+arch-niri/
 ├── Makefile
 ├── install.sh
+├── deploy-outputs.sh
 ├── check-local.sh
 ├── post-install-check.sh
 ├── sync.sh
@@ -270,13 +371,19 @@ arch-niri-waybar/
         └── .config/
             ├── niri/
             │   ├── config.kdl
-            │   └── conf.d/
-            │       ├── 10-input.kdl
-            │       ├── 20-layout.kdl
-            │       ├── 30-environment.kdl
-            │       ├── 40-startup.kdl
-            │       ├── 50-binds.kdl
-            │       └── keymap.xkb
+            │   ├── conf.d/
+            │   │   ├── 10-input.kdl
+            │   │   ├── 20-layout.kdl
+            │   │   ├── 30-environment.kdl
+            │   │   ├── 40-startup.kdl
+            │   │   ├── 50-binds.kdl
+            │   │   ├── 60-outputs.kdl  ← создаётся deploy-outputs.sh
+            │   │   └── keymap.xkb
+            │   └── outputs/
+            │       ├── amar224.kdl
+            │       ├── amar319.kdl
+            │       ├── amar319-1.kdl
+            │       └── default.kdl
             ├── alacritty/alacritty.toml
             ├── swaylock/config
             ├── waybar/

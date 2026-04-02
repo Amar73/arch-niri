@@ -63,6 +63,9 @@ fi
 echo "[*] Validate niri config"
 niri validate || true
 
+echo "[*] Deploy outputs config"
+bash "${ROOT_DIR}/deploy-outputs.sh"
+
 echo "[*] Validate bashrc"
 bash -n "$HOME/.bashrc"
 
