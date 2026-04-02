@@ -1,168 +1,74 @@
-# =============================================================================
-# ~/.config/alacritty/alacritty.toml
-# Catppuccin Mocha — согласован с waybar/style.css и swaylock/config
-# Документация: https://alacritty.org/config-alacritty.html
-# =============================================================================
-
 [general]
-shell = "/usr/bin/bash"
-
-# =============================================================================
-# ОКНО
-# =============================================================================
-
-[window]
-padding    = { x = 8, y = 8 }
-# None — нет заголовка, niri управляет декорациями через prefer-no-csd
-decorations = "None"
-# 0.95 — лёгкая прозрачность, как у waybar
-opacity     = 0.95
-blur        = false
-
-[window.dimensions]
-columns = 120
-lines   = 35
-
-# =============================================================================
-# ПРОКРУТКА
-# =============================================================================
-
-[scrolling]
-history    = 10000
-multiplier = 3
-
-# =============================================================================
-# ШРИФТ
-# =============================================================================
+import = [
+  "~/.config/alacritty/themes/themes/rainbow.toml"
+]
 
 [font]
-size = 11.0
+size = 14
 
-[font.normal]
-family = "JetBrainsMono Nerd Font"
-style  = "Regular"
+  [font.bold]
+  family = "UbuntuMono Nerd Font"
+  style = "Heavy"
 
-[font.bold]
-family = "JetBrainsMono Nerd Font"
-style  = "Bold"
+  [font.bold_italic]
+  family = "UbuntuMono Nerd Font"
+  style = "Heavy Italic"
 
-[font.italic]
-family = "JetBrainsMono Nerd Font"
-style  = "Italic"
+  [font.italic]
+  family = "UbuntuMono Nerd Font"
+  style = "Medium Italic"
 
-[font.bold_italic]
-family = "JetBrainsMono Nerd Font"
-style  = "Bold Italic"
+  [font.normal]
+  family = "UbuntuMono Nerd Font"
+  style = "Medium"
 
-[font.offset]
-x = 0
-y = 1
+[[keyboard.bindings]]
+key = "N"
+mods = "Control|Shift"
+action = "CreateNewWindow"
 
-# =============================================================================
-# КУРСОР
-# =============================================================================
+[[keyboard.bindings]]
+key = "K"
+mods = "Control|Shift"
+chars = """
+reset
+"""
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Control|Shift"
+chars = "l"
+
+[window]
+decorations = "buttonless"
+opacity = 0.5
+blur = false
+dynamic_padding = false
+dynamic_title = true
+
+  [window.padding]
+  x = 25
+  y = 20
 
 [cursor]
-style            = { shape = "Beam", blinking = "On" }
-blink_interval   = 500
-blink_timeout    = 0
-unfocused_hollow = true
-thickness        = 0.15
+blink_interval = 500
+blink_timeout = 0
+thickness = 0.4
 
-# =============================================================================
-# ПАЛИТРА — Catppuccin Mocha
-# Согласована с waybar/style.css (CSS vars) и swaylock/config
-# =============================================================================
+  [cursor.style]
+  shape = "Underline"
+  blinking = "On"
 
-[colors.primary]
-background = "#111111"   # crust
-foreground = "#cdd6f4"   # text
+[selection]
+save_to_clipboard = true
 
-[colors.cursor]
-text   = "#111111"
-cursor = "#cdd6f4"
+[scrolling]
+history = 10_000
 
-[colors.vi_mode_cursor]
-text   = "#111111"
-cursor = "#cba6f7"   # mauve
+[[mouse.bindings]]
+mouse = "Right"
+action = "Paste"
 
-[colors.search.matches]
-foreground = "#111111"
-background = "#a6adc8"   # subtext0
-
-[colors.search.focused_match]
-foreground = "#111111"
-background = "#a6e3a1"   # green
-
-[colors.hints.start]
-foreground = "#111111"
-background = "#f9e2af"   # yellow
-
-[colors.hints.end]
-foreground = "#111111"
-background = "#45475a"   # surface1
-
-[colors.selection]
-text       = "#111111"
-background = "#cba6f7"   # mauve
-
-[colors.normal]
-black   = "#45475a"   # surface1
-red     = "#f38ba8"   # red
-green   = "#a6e3a1"   # green
-yellow  = "#f9e2af"   # yellow
-blue    = "#89b4fa"   # blue
-magenta = "#cba6f7"   # mauve
-cyan    = "#89dceb"   # sky
-white   = "#bac2de"   # subtext1
-
-[colors.bright]
-black   = "#585b70"   # surface2
-red     = "#f38ba8"
-green   = "#a6e3a1"
-yellow  = "#f9e2af"
-blue    = "#89b4fa"
-magenta = "#cba6f7"
-cyan    = "#89dceb"
-white   = "#a6adc8"   # subtext0
-
-# =============================================================================
-# МЫШЬ
-# =============================================================================
-
-[mouse]
-hide_when_typing = true
-
-# =============================================================================
-# БИНДИНГИ КЛАВИШ
-# =============================================================================
-
-[keyboard]
-bindings = [
-  { key = "C", mods = "Control|Shift", action = "Copy"            },
-  { key = "V", mods = "Control|Shift", action = "Paste"           },
-  { key = "F", mods = "Control|Shift", action = "SearchForward"   },
-  { key = "B", mods = "Control|Shift", action = "SearchBackward"  },
-  { key = "Plus",  mods = "Control",   action = "IncreaseFontSize" },
-  { key = "Minus", mods = "Control",   action = "DecreaseFontSize" },
-  { key = "Key0",  mods = "Control",   action = "ResetFontSize"    },
-  { key = "PageUp",   mods = "Shift",  action = "ScrollPageUp"    },
-  { key = "PageDown", mods = "Shift",  action = "ScrollPageDown"  },
-  { key = "Home",     mods = "Shift",  action = "ScrollToTop"     },
-  { key = "End",      mods = "Shift",  action = "ScrollToBottom"  },
-]
-
-# =============================================================================
-# URL — открывать по Ctrl+клик или Ctrl+Shift+U
-# =============================================================================
-
-[hints]
-enabled = [
-  {
-    regex           = "(https?|ftp|file)://[\\w\\-.~:/?#\\[\\]@!$&'()*+,;=%]+"
-    command         = "xdg-open"
-    post_processing = true
-    mouse           = { enabled = true, mods = "Control" }
-    binding         = { key = "U", mods = "Control|Shift" }
-  }
-]
+[env]
+TERM = "xterm-256color"
+WINIT_X11_SCALE_FACTOR = "1.0"
