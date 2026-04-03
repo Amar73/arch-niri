@@ -208,12 +208,14 @@ timedatectl status
 
 # В моем случае установлено два диска. Первый sdd /dev/sda- на нем boot и root. Второй hdd /dev/sdb- на нем home и data.
 
-⚠️ **Форматируем только root (`/dev/sda2`).** `/dev/sdb1` и `/dev/sdb2` не трогаем.
+⚠️ **Форматируем только root (`/dev/sda3`).** `/dev/sdb1` и `/dev/sdb2` не трогаем.
 
 ```bash
 # Форматируем только корень (если нужна чистая установка)
-mkfs.ext4 /dev/sda2
+mkfs.ext4 /dev/sda3
 mkfs.fat -F 32 /dev/sda1
+mkswap /dev/sda2
+swapon /dev/sda2
 
 # Монтируем корень
 mount /dev/sda2 /mnt
@@ -273,7 +275,7 @@ findmnt -R /mnt
 Пример команды для базовой установки с [ядром] Linux и прошивками для часто встречающихся устройств:
 
 ```bash
-pacstrap -K /mnt base linux linux-firmware sudo  vim git base-devel networkmanager man-db man-pages texinfo dbus polkit inetutils openssh
+pacstrap -K /mnt base linux linux-firmware sudo  vim git github-cli base-devel networkmanager man-db man-pages texinfo dbus polkit inetutils openssh
 ```
 
 **Совет**
