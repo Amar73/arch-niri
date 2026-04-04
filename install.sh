@@ -77,6 +77,16 @@ install_aur_packages() {
     || log "WARN: qt5-wayland не найден — возможно включён в qt5-base, пропускаем"
 }
 
+install_niri_start() {
+  log "Установка niri-start wrapper"
+  sudo tee /usr/local/bin/niri-start > /dev/null << 'EOF'
+#!/bin/bash
+exec dbus-run-session niri
+EOF
+  sudo chmod +x /usr/local/bin/niri-start
+  echo "[OK] /usr/local/bin/niri-start создан"
+}
+
 backup_if_exists() {
   local path="$1"
   if [[ -e "$path" && ! -L "$path" ]]; then
@@ -138,6 +148,9 @@ print_summary() {
 Дальше:
   sudo reboot
 
+Если после reboot greeter не пускает — очисти кеш tuigreet:
+  sudo rm -f /var/cache/tuigreet/*
+
 После входа:
   make check
   make logs
@@ -165,6 +178,7 @@ main() {
   add_groups
   install_yay
   install_aur_packages
+  install_niri_start
   deploy_files
   enable_user_services
   print_summary

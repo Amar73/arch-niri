@@ -92,7 +92,12 @@ systemctl --user is-enabled cliphist-text.service   >/dev/null 2>&1 && ok "cliph
 systemctl --user is-enabled cliphist-images.service >/dev/null 2>&1 && ok "cliphist-images.service enabled" || warn "cliphist-images.service not enabled"
 
 echo
-echo "=== niri config validation ==="
+echo "=== niri-start wrapper ==="
+if [[ -x /usr/local/bin/niri-start ]]; then
+  ok "/usr/local/bin/niri-start exists and executable"
+else
+  fail "/usr/local/bin/niri-start missing — запусти: make sync"
+fi
 niri validate >/dev/null 2>&1 \
   && ok "niri config valid" || fail "niri config invalid"
 

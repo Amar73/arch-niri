@@ -15,6 +15,18 @@ backup_if_exists() {
   fi
 }
 
+echo "[*] Sync /usr/local/bin/niri-start"
+if [[ ! -f /usr/local/bin/niri-start ]]; then
+  sudo tee /usr/local/bin/niri-start > /dev/null << 'EOF'
+#!/bin/bash
+exec dbus-run-session niri
+EOF
+  sudo chmod +x /usr/local/bin/niri-start
+  echo "[OK] niri-start создан"
+else
+  echo "[OK] niri-start уже существует"
+fi
+
 echo "[*] Sync /etc/greetd"
 sudo install -d -m 755 /etc/greetd
 sudo rsync -a --delete "${FILES_DIR}/etc/greetd/" /etc/greetd/
