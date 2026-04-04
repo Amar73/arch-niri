@@ -33,23 +33,32 @@ sudo pacman -S --needed git rsync base-devel
 
 ### 3. SSH-ключ для GitHub
 
-#### Вариант 1: GitHub CLI (рекомендуется)
+Сначала генерируем ключ (если ещё нет):
 
 ```bash
+ssh-keygen -t ed25519 -C "user@email" -f ~/.ssh/id_ed25519
+```
+
+Затем добавляем публичный ключ на GitHub — выбери удобный способ:
+
+#### Вариант А — GitHub CLI (рекомендуется)
+
+```bash
+sudo pacman -S github-cli
 gh auth login
 
-# Интерактивное меню — выбираем по порядку:
-#   What account do you want to log into?  → GitHub.com
-#   What is your preferred protocol?       → SSH
-#   Upload your SSH public key?            → ~/.ssh/id_ed25519.pub
-#   How would you like to authenticate?    → Login with a web browser
+# Интерактивное меню:
+#   Account          → GitHub.com
+#   Protocol         → SSH
+#   Upload SSH key?  → ~/.ssh/id_ed25519.pub
+#   Authenticate     → Login with a web browser
 #
 # На экране появится 8-значный код, например: ABCD-1234
 # Берёшь телефон → github.com/login/device → вводишь код → подтверждаешь
-# Ключ загружается автоматически.
+# Ключ загружается автоматически
 ```
 
-#### Вариант 2: curl + Personal Access Token
+#### Вариант Б — curl + Personal Access Token
 
 ```bash
 # На телефоне: github.com → Settings → Developer settings
@@ -64,56 +73,31 @@ curl -s -X POST \
 # Ответ JSON с полем "id" означает успех
 ```
 
-#### Вариант 3: вручную с телефона
+#### Вариант В — вручную с телефона
 
-Ключ ed25519 короткий (~68 символов после `ssh-ed25519 `). Смотришь на экран, вводишь на `github.com → Settings → SSH and GPG keys → New SSH key`.
-
-#### Вариант 4: — есть доступ к интернету напрямую с машины
+Публичный ключ ed25519 короткий (~68 символов после `ssh-ed25519 `).
+Смотришь на экран, вводишь на: github.com → Settings → SSH and GPG keys → New SSH key.
 
 ```bash
-# Сгенерировать ключ
-ssh-keygen -t ed25519 -C "a.maryanenko@gmail.com" -f ~/.ssh/id_ed25519
-
-# Скопировать публичный ключ в буфер
 cat ~/.ssh/id_ed25519.pub
 ```
 
-Зайти на github.com → Settings → SSH and GPG keys → New SSH key,
-вставить содержимое публичного ключа, сохранить.
+#### Вариант Г — через USB-флешку с другого компьютера
 
 ```bash
-# Проверить
-ssh -T git@github.com
-# Ожидаемый ответ: "Hi Amar73! You've successfully authenticated..."
-```
-
-#### Вариант 5: — через USB-флешку с другого компьютера
-
-Если на новой машине нет браузера или удобного доступа к GitHub:
-
-```bash
-# 1. На новой машине — сгенерировать ключ
-ssh-keygen -t ed25519 -C "a.maryanenko@gmail.com" -f ~/.ssh/id_ed25519
-
-# 2. Смонтировать USB-флешку (имя устройства узнать через lsblk)
+# 1. Смонтировать флешку (имя устройства — через lsblk)
 sudo mkdir -p /mnt/usb
 sudo mount /dev/sdb1 /mnt/usb
 
-# 3. Скопировать публичный ключ на флешку
+# 2. Скопировать публичный ключ на флешку
 cp ~/.ssh/id_ed25519.pub /mnt/usb/id_ed25519.pub
-
-# 4. Размонтировать
 sudo umount /mnt/usb
 
-# 5. Перейти на другой компьютер с браузером
-# Открыть файл id_ed25519.pub с флешки, скопировать содержимое
-# Зайти: github.com → Settings → SSH and GPG keys → New SSH key
-# Вставить ключ, сохранить
-
-# 6. Вернуться на новую машину, проверить
-ssh -T git@github.com
+# 3. На другом компьютере с браузером:
+#    github.com → Settings → SSH and GPG keys → New SSH key → вставить ключ
 ```
-## Проверяем соединение
+
+#### Проверка подключения
 
 ```bash
 eval "$(ssh-agent -s)"
@@ -141,17 +125,17 @@ EOF
 ### 5. Клонирование репозитория
 
 ```bash
-mkdir ~/Amar73
+mkdir -p ~/Amar73
 cd ~/Amar73
 
-# github-cli
+# Через GitHub CLI (если использовался вариант А)
 gh repo clone Amar73/arch-niri
 
-# По SSH (рекомендуется, после настройки ключа)
-git clone git@github.com:Amar73/debi3wm.git
+# Через SSH (рекомендуется после настройки ключа)
+git clone git@github.com:Amar73/arch-niri.git
 
-# ИЛИ по HTTPS (если SSH ещё не работает) — setup.sh переключит remote
-git clone https://github.com/Amar73/debi3wm.git
+# Через HTTPS (если SSH ещё не работает)
+git clone https://github.com/Amar73/arch-niri.git
 
 cd ~/Amar73/arch-niri
 chmod +x *.sh
@@ -159,14 +143,14 @@ chmod +x *.sh
 
 ### 6. Настройка git (первый раз на новой машине)
 
-**Если для копирования ключа и клонирования репозитория использовалась утилита github-cli, нижеописанные действия для настройки Git могут не потребоваться.**
+> Если использовался GitHub CLI (вариант А) — этот шаг может не потребоваться.
 
 После клонирования нужно привязать git к аккаунту — иначе коммиты будут
 без автора и `git push` откажет:
 
 ```bash
-git config --global user.email "a.maryanenko@gmail.com"
-git config --global user.name "Andrey Maryanenko"
+git config --global user.email "user@email"
+git config --global user.name "user name"
 
 # Проверить
 git config --list | grep user
@@ -205,6 +189,12 @@ make install
 sudo reboot
 ```
 
+> Если после reboot greeter не пускает — очисти кеш tuigreet:
+> ```bash
+> sudo rm -f /var/cache/tuigreet/*
+> sudo systemctl restart greetd
+> ```
+
 После входа в niri:
 
 ```bash
@@ -224,10 +214,11 @@ make logs     # логи сервисов текущей загрузки
 4. Добавление пользователя в группы: video, input, seat
 5. Сборка и установка `yay` из AUR
 6. AUR-пакеты: `bibata-cursor-theme`, `qt5-wayland`
-7. `rsync` конфигов в `~/.config/`
-8. Деплой `.bashrc` и `.ssh/config`
-9. Деплой конфига мониторов по hostname (`deploy-outputs.sh`)
-10. Включение user-сервисов: swayidle, cliphist-text, cliphist-images
+7. Создание `/usr/local/bin/niri-start` (wrapper для greetd)
+8. `rsync` конфигов в `~/.config/`
+9. Деплой `.bashrc` и `.ssh/config`
+10. Деплой конфига мониторов по hostname (`deploy-outputs.sh`)
+11. Включение user-сервисов: swayidle, cliphist-text, cliphist-images
 
 ### Устанавливаемые пакеты
 
@@ -354,8 +345,8 @@ for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
 | `Mod+1..9, Mod+0` | Воркспейсы 1-10 (независимые на каждом мониторе) |
 | `Mod+Shift+1..9, Mod+Shift+0` | Перенос колонки на воркспейс 1-10 |
 | `Mod+Page_Up/Down` | Соседний воркспейс |
-| `Mod+Tab` | Следующий монитор |
-| `Mod+Shift+Tab` | Предыдущий монитор |
+| `Mod+Tab` | Монитор вправо |
+| `Mod+Shift+Tab` | Монитор влево |
 | `Mod+Shift+,` | Перенести окно на монитор влево |
 | `Mod+Shift+.` | Перенести окно на монитор вправо |
 | `Mod+F` | Развернуть колонку |
@@ -366,14 +357,11 @@ for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
 | `Mod+V` | Cliphist picker |
 | `Print` | Скриншот области |
 | `Mod+Print` | Скриншот экрана |
-| `Shift+F1` | Mute/Unmute звук (wpctl) |
+| `Shift+F1` | Mute / unmute звук |
 | `Shift+F2` | Громкость −5% |
 | `Shift+F3` | Громкость +5% |
-| `Shift+F1` | Mute/unmute звук |
-| `Shift+F2` | Громкость −5% |
-| `Shift+F3` | Громкость +5% |
-| `XF86Audio*` | Громкость (wpctl) — закомментировано, раскомментировать в `50-binds.kdl` при появлении медиаклавиш |
-| `XF86Brightness*` | Яркость (brightnessctl) — закомментировано, раскомментировать в `50-binds.kdl` при появлении медиаклавиш |
+| `XF86Audio*` | Громкость — закомментировано в `50-binds.kdl`, раскомментировать при появлении медиаклавиш |
+| `XF86Brightness*` | Яркость — закомментировано в `50-binds.kdl`, раскомментировать при появлении медиаклавиш |
 
 ---
 
@@ -392,6 +380,9 @@ for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
 - `waybar.service enable` → убран (waybar стартует через `niri spawn-at-startup`)
 - CSS-переменные в `waybar/style.css` → прямые hex-значения (GTK CSS не поддерживает `var()`)
 - `#window:empty` и дочерние селекторы `>` → убраны (не поддерживаются GTK CSS)
+- `focus-monitor-next/prev` → заменены на `focus-monitor-right/left` (нет в niri 25.11)
+- `[hints]` в `alacritty.toml` → переведён в `[[hints.enabled]]` (TOML multiline fix)
+- `shell` в `alacritty.toml` → перенесён из `[general]` в `[terminal]`
 - Мёртвая переменная `REPO_URL="${2:-}"` убрана из `bootstrap-dotfiles.sh`
 
 ### Новое
@@ -408,7 +399,8 @@ for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
 | `update.sh` + `make update` | Комплексное обновление системы |
 | `deploy-outputs.sh` + `make outputs` | Авто-деплой конфига мониторов по hostname |
 | `niri/outputs/*.kdl` | Конфиги мониторов для amar224, amar319, amar319-1, default |
-| `50-binds.kdl` | Воркспейсы 1-10, навигация между мониторами |
+| `50-binds.kdl` | Воркспейсы 1-10, мониторы, Shift+F1/F2/F3 для звука |
+| `/usr/local/bin/niri-start` | Wrapper: `dbus-run-session niri`, создаётся при `make install` |
 
 ---
 
