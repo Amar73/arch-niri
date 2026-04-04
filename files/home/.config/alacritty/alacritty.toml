@@ -156,13 +156,9 @@ bindings = [
 # URL — открывать по Ctrl+клик или Ctrl+Shift+U
 # =============================================================================
 
-[hints]
-enabled = [
-  {
-    regex           = "(https?|ftp|file)://[\\w\\-.~:/?#\\[\\]@!$&'()*+,;=%]+"
-    command         = "xdg-open"
-    post_processing = true
-    mouse           = { enabled = true, mods = "Control" }
-    binding         = { key = "U", mods = "Control|Shift" }
-  }
-]
+[[hints.enabled]]
+regex = "(https?|ftp|file)://[\\w\\-.~:/?#\\[\\]@!$&'()*+,;=%]+"
+command = "xdg-open"
+post_processing = true
+mouse = { enabled = true, mods = "Control" }
+binding = { key = "U", mods = "Control|Shift" }
