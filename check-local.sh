@@ -81,7 +81,7 @@ done
 # --------------------------------------------------------------------------
 echo
 echo "=== makefile targets ==="
-for target in install check check-local sync update logs backup dots dots-local validate reload; do
+for target in install check check-local sync update logs backup dots dots-local validate reload outputs packages; do
   if grep -q "^${target}:" "${ROOT_DIR}/Makefile"; then
     ok "target: $target"
   else

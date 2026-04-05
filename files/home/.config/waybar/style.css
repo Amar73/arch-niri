@@ -109,6 +109,11 @@ window#waybar.hidden {
   padding-left: 4px;
 }
 
+#window:empty {
+  padding: 0;
+  margin: 0;
+  background-color: transparent;
+}
 
 /* --------------------------------------------------------------------------
    Clock

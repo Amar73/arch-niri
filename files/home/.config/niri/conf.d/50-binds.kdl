@@ -4,6 +4,7 @@ binds {
     // -------------------------------------------------------------------------
     Mod+Return { spawn "alacritty"; }
     Mod+D { spawn "fuzzel"; }
+    Mod+B { spawn "yandex-browser-stable"; }
     Mod+Q { close-window; }
     Mod+Shift+E { quit; }
 
@@ -90,9 +91,6 @@ binds {
     Shift+F1 { spawn "wpctl" "set-mute"   "@DEFAULT_AUDIO_SINK@" "toggle"; }
     Shift+F2 { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%-"; }
     Shift+F3 { spawn "wpctl" "set-volume" "@DEFAULT_AUDIO_SINK@" "5%+"; }
-
-    // Яндекс.Браузер с русским интерфейсом
-    Mod+B { spawn "yandex-browser-stable"; }
 
     // -------------------------------------------------------------------------
     // Утилиты
