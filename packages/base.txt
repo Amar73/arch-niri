@@ -43,7 +43,7 @@ papirus-icon-theme
 pipewire
 pipewire-alsa
 pipewire-pulse
-pipewire-jack
+# pipewire-jack — конфликтует с jack2, раскомментировать если jack2 не установлен
 wireplumber
 alsa-utils
 pamixer
