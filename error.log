@@ -1,0 +1,23 @@
+07:49:09 amar@amar319-1:~/Amar73/arch-niri \033[0;32m(main)\033[0m
+\033git pullAmar73/arch-niri/
+remote: Enumerating objects: 11, done.
+remote: Counting objects: 100% (11/11), done.
+remote: Compressing objects: 100% (3/3), done.
+remote: Total 6 (delta 2), reused 6 (delta 2), pack-reused 0 (from 0)
+Unpacking objects: 100% (6/6), 1.27 KiB | 56.00 KiB/s, done.
+From github.com:Amar73/arch-niri
+   c0c227c..dbecdd1  main       -> origin/main
+Updating c0c227c..dbecdd1
+Fast-forward
+ error.log          |  26 -----------
+ files/home/.bashrc | 197 ++++++-----------------------------------------------------------------------
+ 2 files changed, 15 insertions(+), 208 deletions(-)
+07:49:13 amar@amar319-1:~/Amar73/arch-niri \033[0;32m(main)\033[0m
+\033cp files/home/.bashrc ~/.bashrc
+cp: overwrite '/home/amar/.bashrc'? yes
+07:49:42 amar@amar319-1:~/Amar73/arch-niri \033[0;32m(main)\033[0m
+\033source ~/.bashrc
+ * Warning: --agents is deprecated, ignoring.
+Enter passphrase for /home/amar/.ssh/id_ed25519:
+07:49:58 amar@amar319-1:~/Amar73/arch-niri \033[0;32m(main)\033[0m
+\033[0;32m✓\033[0m $
