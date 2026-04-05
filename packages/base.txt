@@ -1,0 +1,124 @@
+# =============================================================================
+# packages/base.txt — базовые пакеты из официальных репозиториев Arch Linux
+# Общие для всех машин (рабочие станции + ноутбуки)
+#
+# Установка:
+#   grep -v '^#' packages/base.txt | grep -v '^$' | xargs sudo pacman -S --needed
+# =============================================================================
+
+# --- Wayland — стек и интеграция ---
+wayland
+wayland-protocols
+xorg-xwayland
+xdg-desktop-portal
+xdg-desktop-portal-wlr
+xdg-desktop-portal-gtk
+xdg-utils
+xdg-user-dirs
+
+# --- Qt Wayland ---
+qt5-wayland
+qt6-wayland
+qt6-svg
+qt6-multimedia
+qt6ct
+kvantum
+
+# --- GTK ---
+nwg-look
+adw-gtk-theme
+
+# --- Шрифты ---
+ttf-jetbrains-mono-nerd
+otf-font-awesome
+noto-fonts
+noto-fonts-cjk
+noto-fonts-emoji
+ttf-nerd-fonts-symbols
+
+# --- Иконки и курсоры ---
+papirus-icon-theme
+
+# --- Звук (PipeWire) ---
+pipewire
+pipewire-alsa
+pipewire-pulse
+pipewire-jack
+wireplumber
+alsa-utils
+pamixer
+playerctl
+pulsemixer
+
+# --- Системные компоненты ---
+base-devel
+accountsservice
+polkit-gnome
+xdg-utils
+xdg-user-dirs
+openssh
+keychain
+gvfs
+unzip
+tree
+dmidecode
+pciutils
+
+# --- Сеть ---
+iproute2
+bind
+networkmanager
+network-manager-applet
+nm-connection-editor
+inetutils
+
+# --- Терминал ---
+alacritty
+
+# --- Файловые менеджеры ---
+mc
+yazi
+thunar
+
+# --- Запуск приложений ---
+fuzzel
+
+# --- Уведомления ---
+mako
+
+# --- Буфер обмена ---
+wl-clipboard
+cliphist
+
+# --- Скриншоты ---
+grim
+slurp
+swappy
+
+# --- Браузеры и связь ---
+firefox
+telegram-desktop
+thunderbird
+
+# --- Текстовые редакторы ---
+vim
+kate                           # Мощный редактор от KDE, активно поддерживается
+
+# --- Утилиты командной строки ---
+wget
+curl
+git
+eza
+duf
+ncdu
+rclone
+lazygit
+s-tui
+jq
+
+# --- Мониторинг системы ---
+btop
+htop
+
+# --- Docker ---
+docker

@@ -1,0 +1,31 @@
+# =============================================================================
+# packages/niri.txt — пакеты специфичные для niri-стека
+# Дополняют base.txt
+#
+# Установка:
+#   grep -v '^#' packages/niri.txt | grep -v '^$' | xargs sudo pacman -S --needed
+# =============================================================================
+
+# --- Compositor ---
+niri
+xwayland-satellite
+
+# --- Greeter ---
+greetd
+greetd-tuigreet
+
+# --- Session ---
+seatd
+
+# --- Статусбар ---
+waybar
+
+# --- Фон рабочего стола ---
+swaybg
+
+# --- Блокировка экрана и простой ---
+swaylock
+swayidle
+
+# --- Диагностика раскладок (нужен для waybar niri/language) ---
+jq

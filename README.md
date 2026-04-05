@@ -15,169 +15,62 @@ Bootstrap-репозиторий для чистого Arch Linux.
   groups $USER   # должна быть wheel
   sudo -v        # должно пройти без ошибки
   ```
+  Если группы нет — добавить:
+  ```bash
+  sudo usermod -aG wheel $USER
+  # Выйти и войти снова чтобы изменения применились
+  ```
 - Подключение к интернету:
   ```bash
   ping -c2 archlinux.org
+  ```
+  Если нет сети — запустить NetworkManager:
+  ```bash
+  sudo systemctl start NetworkManager
+  nmtui   # текстовый интерфейс для подключения к Wi-Fi
   ```
 
 ### 2. Предустановка минимального набора
 
 На чистом Arch `git` и `rsync` могут отсутствовать. `install.sh` ставит их
-автоматически если не найдёт, но лучше сделать вручную:
+автоматически если не найдёт, но лучше сделать вручную — это гарантирует что
+клонирование репозитория пройдёт до запуска установщика:
 
 ```bash
 sudo pacman -S --needed git rsync base-devel
 ```
 
-`base-devel` нужен для сборки `yay` через `makepkg`.
+- `git` — для клонирования репозитория
+- `rsync` — для синхронизации конфигов в `install.sh` и `sync.sh`
+- `base-devel` — набор инструментов для сборки пакетов из исходников, нужен для `yay`
 
-### 3. SSH-ключ для GitHub
-
-Сначала генерируем ключ (если ещё нет):
-
-```bash
-ssh-keygen -t ed25519 -C "user@email" -f ~/.ssh/id_ed25519
-```
-
-Затем добавляем публичный ключ на GitHub — выбери удобный способ:
-
-#### Вариант А — GitHub CLI (рекомендуется)
-
-```bash
-sudo pacman -S github-cli
-gh auth login
-
-# Интерактивное меню:
-#   Account          → GitHub.com
-#   Protocol         → SSH
-#   Upload SSH key?  → ~/.ssh/id_ed25519.pub
-#   Authenticate     → Login with a web browser
-#
-# На экране появится 8-значный код, например: ABCD-1234
-# Берёшь телефон → github.com/login/device → вводишь код → подтверждаешь
-# Ключ загружается автоматически
-```
-
-#### Вариант Б — curl + Personal Access Token
-
-```bash
-# На телефоне: github.com → Settings → Developer settings
-#              → Tokens (classic) → New → scope: admin:public_key → Generate
-GITHUB_TOKEN="ghp_xxxxxxxxxxxxxxxxxxxx"
-
-curl -s -X POST \
-     -H "Authorization: token $GITHUB_TOKEN" \
-     -H "Accept: application/vnd.github+json" \
-     https://api.github.com/user/keys \
-     -d "{\"title\":\"arch-$(hostname)\",\"key\":\"$(cat ~/.ssh/id_ed25519.pub)\"}"
-# Ответ JSON с полем "id" означает успех
-```
-
-#### Вариант В — вручную с телефона
-
-Публичный ключ ed25519 короткий (~68 символов после `ssh-ed25519 `).
-Смотришь на экран, вводишь на: github.com → Settings → SSH and GPG keys → New SSH key.
-
-```bash
-cat ~/.ssh/id_ed25519.pub
-```
-
-#### Вариант Г — через USB-флешку с другого компьютера
-
-```bash
-# 1. Смонтировать флешку (имя устройства — через lsblk)
-sudo mkdir -p /mnt/usb
-sudo mount /dev/sdb1 /mnt/usb
-
-# 2. Скопировать публичный ключ на флешку
-cp ~/.ssh/id_ed25519.pub /mnt/usb/id_ed25519.pub
-sudo umount /mnt/usb
-
-# 3. На другом компьютере с браузером:
-#    github.com → Settings → SSH and GPG keys → New SSH key → вставить ключ
-```
-
-#### Проверка подключения
-
-```bash
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
-
-# Должно ответить: Hi Amar73! You've successfully authenticated...
-ssh -T git@github.com
-```
-
-### 4. /etc/hosts для SSH-инфраструктуры
-
-Если используешь ProxyJump-цепочки из `.ssh/config` — хосты должны резолвиться.
-Без этого `amar224 → wn75 → arch03` ломается на первом прыжке:
-
-```bash
-sudo tee -a /etc/hosts << 'EOF'
-192.168.1.100  amar
-192.168.1.101  wn75
-192.168.1.110  ui
-EOF
-```
-
-Замени IP на реальные адреса своей инфраструктуры.
-
-### 5. Клонирование репозитория
+### 3. Клонирование репозитория
 
 ```bash
 mkdir -p ~/Amar73
 cd ~/Amar73
 
-# Через GitHub CLI (если использовался вариант А)
-gh repo clone Amar73/arch-niri
-
-# Через SSH (рекомендуется после настройки ключа)
-git clone git@github.com:Amar73/arch-niri.git
-
-# Через HTTPS (если SSH ещё не работает)
+# Клонирование по HTTPS — работает без SSH-ключа, только для чтения
 git clone https://github.com/Amar73/arch-niri.git
 
 cd ~/Amar73/arch-niri
+# Сделать все .sh файлы исполняемыми (на новой машине права могут сброситься)
 chmod +x *.sh
 ```
 
-### 6. Настройка git (первый раз на новой машине)
+### 4. Проверка до запуска
 
-> Если использовался GitHub CLI (вариант А) — этот шаг может не потребоваться.
-
-После клонирования нужно привязать git к аккаунту — иначе коммиты будут
-без автора и `git push` откажет:
-
-```bash
-git config --global user.email "user@email"
-git config --global user.name "user name"
-
-# Проверить
-git config --list | grep user
-```
-
-Убедиться что remote указывает на правильный репозиторий:
+Перед установкой убеждаемся что в репо нет синтаксических ошибок и все
+нужные файлы на месте. Эта проверка работает без pacman и systemctl — безопасна
+в любом окружении:
 
 ```bash
-git remote -v
-# Ожидаемый вывод:
-# origin  git@github.com:Amar73/arch-niri.git (fetch)
-# origin  git@github.com:Amar73/arch-niri.git (push)
-```
-
-Если remote не настроен — добавить вручную:
-
-```bash
-git remote add origin git@github.com:Amar73/arch-niri.git
-git branch -M main
-git push -u origin main
-```
-
-### 7. Проверка до запуска
-
-```bash
-# Синтаксис и структура файлов — без pacman/systemctl, работает везде
 make check-local
+# Проверяет:
+#   — синтаксис всех .sh скриптов через bash -n
+#   — наличие всех конфигурационных файлов в files/
+#   — наличие всех целей в Makefile
+#   — отсутствие посторонних референсов
 ```
 
 ---
@@ -186,41 +79,81 @@ make check-local
 
 ```bash
 make install
+```
+
+Скрипт устанавливает весь стек автоматически. По завершении:
+
+```bash
 sudo reboot
 ```
 
-> Если после reboot greeter не пускает — очисти кеш tuigreet:
+> **Если после reboot greeter не пускает** — это обычно кеш tuigreet со старой
+> командой сессии. Переключиться на TTY2 (`Ctrl+Alt+F2`), войти там и:
 > ```bash
 > sudo rm -f /var/cache/tuigreet/*
 > sudo systemctl restart greetd
+> # Вернуться на TTY1 (Ctrl+Alt+F1) и попробовать снова
 > ```
 
-После входа в niri:
+После входа в niri — открыть терминал (`Mod+Return`) и проверить:
 
 ```bash
-make check    # полная проверка всех компонентов
-make logs     # логи сервисов текущей загрузки
+make check    # полная проверка: команды, пакеты, файлы, сервисы, niri config
+make logs     # просмотр логов всех сервисов текущей загрузки
 ```
 
 ---
 
 ## Что делает make install
 
+`install.sh` выполняет шаги последовательно, каждый залогирован с временной
+меткой. При ошибке на любом шаге скрипт останавливается (`set -Eeuo pipefail`).
+
 Порядок выполнения:
 
-1. `sudo pacman -Syu` — обновление системы
-2. `sudo pacman -S ...` — официальные пакеты (список ниже)
-3. Включение сервисов: NetworkManager, seatd, greetd
-4. Добавление пользователя в группы: video, input, seat
-5. Сборка и установка `yay` из AUR
-6. AUR-пакеты: `bibata-cursor-theme`, `qt5-wayland`
-7. Создание `/usr/local/bin/niri-start` (wrapper для greetd)
-8. `rsync` конфигов в `~/.config/`
-9. Деплой `.bashrc` и `.ssh/config`
-10. Деплой конфига мониторов по hostname (`deploy-outputs.sh`)
-11. Включение user-сервисов: swayidle, cliphist-text, cliphist-images
+1. **`sudo pacman -Syu`** — полное обновление системы перед установкой.
+   Гарантирует что не будет конфликтов версий при установке новых пакетов.
 
-### Устанавливаемые пакеты
+2. **`sudo pacman -S ...`** — установка официальных пакетов.
+   Использует `--needed` — пропускает уже установленные, не переустанавливает.
+
+3. **Включение системных сервисов** — `NetworkManager`, `seatd`, `greetd`.
+   - `seatd` — управление seat (доступ к устройствам без root)
+   - `greetd` — display manager, запускает niri после логина
+
+4. **Добавление в группы** — `video`, `input`, `seat`.
+   Без этих групп niri не получит доступ к GPU и устройствам ввода.
+
+5. **Установка `yay`** — сборка из AUR (`git clone` + `makepkg`).
+   Нужен `base-devel`. Пропускается если yay уже установлен.
+
+6. **AUR-пакеты** — `bibata-cursor-theme` (курсор), `qt5-wayland`.
+
+7. **Создание `/usr/local/bin/niri-start`** — wrapper-скрипт для greetd:
+   ```bash
+   #!/bin/bash
+   exec dbus-run-session niri
+   ```
+   Необходим потому что `niri-session` требует systemd user instance с
+   правильным D-Bus, который не поднимается через greetd. `dbus-run-session`
+   создаёт изолированную D-Bus сессию для niri.
+
+8. **`rsync` конфигов** — синхронизация `files/home/.config/` в `~/.config/`.
+   Использует `--delete` с защитой от пустого источника.
+
+9. **Деплой `.bashrc` и `.ssh/config`** — с бэкапом существующих файлов
+   (добавляется суффикс `.bak.TIMESTAMP`).
+
+10. **Деплой конфига мониторов** — `deploy-outputs.sh` определяет hostname,
+    копирует нужный `outputs/hostname.kdl` в `conf.d/60-outputs.kdl`.
+
+11. **Включение user-сервисов** — `swayidle` (таймауты блокировки),
+    `cliphist-text` и `cliphist-images` (история буфера обмена).
+
+### Устанавливаемые пакеты (make install)
+
+Это минимальный набор для работающей niri-системы. Дополнительный софт
+устанавливается отдельно через `make packages`.
 
 | Группа | Пакеты |
 |--------|--------|
@@ -250,21 +183,91 @@ make logs     # логи сервисов текущей загрузки
 
 ---
 
+## Установка дополнительного ПО
+
+Дополнительные пакеты сгруппированы в файлах `packages/` и устанавливаются
+отдельно от основного `make install`. Это позволяет поставить базовую систему
+быстро, а остальное — по мере необходимости.
+
+### Структура packages/
+
+```
+packages/
+├── base.txt   — общий для всех машин (браузеры, утилиты, docker, редакторы)
+├── niri.txt   — специфика niri-стека (уже входит в make install)
+└── aur.txt    — пакеты из AUR (браузеры, облако, утилиты)
+```
+
+### Установка пакетов
+
+```bash
+# Установить всё (base + niri + aur)
+make packages
+
+# Или выборочно через install-packages.sh:
+./install-packages.sh base          # только базовые
+./install-packages.sh aur           # только AUR
+./install-packages.sh base niri     # base + niri, без AUR
+```
+
+`install-packages.sh` читает файлы списков, убирает комментарии и пустые строки,
+передаёт результат в `pacman` или `yay` в зависимости от файла.
+
+### Содержимое base.txt
+
+| Группа | Пакеты |
+|--------|--------|
+| Wayland | `wayland wayland-protocols xorg-xwayland xdg-desktop-portal*` |
+| Qt | `qt5-wayland qt6-wayland qt6ct kvantum` |
+| GTK | `nwg-look adw-gtk-theme` |
+| Шрифты | `ttf-jetbrains-mono-nerd otf-font-awesome noto-fonts* ttf-nerd-fonts-symbols` |
+| Аудио | `pipewire* wireplumber alsa-utils pamixer playerctl pulsemixer` |
+| Сеть | `networkmanager network-manager-applet nm-connection-editor inetutils` |
+| Терминал | `alacritty` |
+| Файловые менеджеры | `mc yazi thunar` |
+| Запуск приложений | `fuzzel` |
+| Уведомления | `mako` |
+| Буфер обмена | `wl-clipboard cliphist` |
+| Скриншоты | `grim slurp swappy` |
+| Браузеры | `firefox telegram-desktop thunderbird` |
+| Редакторы | `vim kate` |
+| Утилиты | `wget curl git eza duf ncdu rclone lazygit s-tui jq` |
+| Мониторинг | `btop htop` |
+| Docker | `docker` |
+
+### Содержимое aur.txt
+
+| Пакет | Назначение |
+|-------|-----------|
+| `bibata-cursor-theme` | Курсор мыши Bibata Modern Ice |
+| `qt5-wayland` | Qt5 Wayland backend |
+| `google-chrome` | Браузер Google Chrome |
+| `brave-bin` | Браузер Brave |
+| `yandex-disk` | Клиент Яндекс.Диска |
+| `birdtray` | Трей-иконка для Thunderbird |
+| `neohtop` | TUI системный монитор |
+| `lazydocker` | TUI для управления Docker |
+| `xwaylandvideobridge` | Шаринг экрана через XWayland (Discord, Zoom) |
+| `ydotool` | Эмуляция ввода на Wayland |
+
+---
+
 ## Цели Makefile
 
 | Команда | Действие |
 |---------|----------|
-| `make install` | Полная установка с нуля |
+| `make install` | Полная установка с нуля — пакеты, конфиги, сервисы |
+| `make packages` | Установка дополнительных пакетов из `packages/` |
 | `make check` | Post-install проверка (требует живой Arch + запущенные сервисы) |
-| `make check-local` | Синтаксис + структура файлов, работает везде (CI) |
-| `make sync` | Синхронизация конфигов + smoke-check сервисов |
-| `make update` | pacman → yay → orphans → daemon-reload → валидация |
-| `make logs` | Логи всех сервисов текущей сессии |
+| `make check-local` | Синтаксис + структура файлов, работает везде без Arch |
+| `make sync` | Синхронизация конфигов из репо в систему + smoke-check сервисов |
+| `make update` | Обновление: pacman → yay → orphans → daemon-reload → валидация |
+| `make logs` | Логи всех сервисов текущей загрузки (greetd, waybar, swayidle, cliphist) |
 | `make backup` | Резервная копия `/etc/greetd`, `~/.config`, `.bashrc`, `.ssh/config` |
-| `make dots-local` | Деплой только `.bashrc` и `.ssh/config` |
-| `make outputs` | Деплой конфига мониторов по hostname |
-| `make validate` | Валидация niri config |
-| `make reload` | Reload niri config без перезапуска |
+| `make dots-local` | Деплой только `.bashrc` и `.ssh/config` из репо |
+| `make outputs` | Деплой конфига мониторов по hostname из `outputs/` |
+| `make validate` | Валидация niri config через `niri validate` |
+| `make reload` | Reload niri config без перезапуска сессии |
 
 ---
 
@@ -272,62 +275,79 @@ make logs     # логи сервисов текущей загрузки
 
 ### Мониторы
 
-Конфиг мониторов деплоится автоматически по hostname из `files/home/.config/niri/outputs/`.
-Если hostname не совпадает ни с одним файлом — применяется `default.kdl` (auto).
+Конфиг мониторов деплоится автоматически в конце `make install` по hostname
+из `files/home/.config/niri/outputs/`. Если hostname не совпадает ни с одним
+файлом — применяется `default.kdl` (auto/preferred режим).
 
-Проверить текущие выходы:
+Проверить текущие выходы и их параметры:
 ```bash
 niri msg outputs
+# Показывает имена, разрешение, позицию, scale для каждого монитора
 ```
 
-Применить вручную:
+Применить конфиг мониторов вручную (например после смены hostname):
 ```bash
 make outputs
 ```
 
 Файлы мониторов в репо:
 
-| Файл | Машина | Мониторы |
-|------|--------|----------|
-| `amar224.kdl` | amar224 | 3× 1920×1080 @ DP-2, DP-3, DP-4 |
-| `amar319.kdl` | amar319 | 2× 1920×1080 @ DVI-I-1, HDMI-A-1 |
-| `amar319-1.kdl` | amar319-1 | 1× 2560×1600 @ DVI-I-2 |
-| `default.kdl` | ноутбуки | auto/preferred |
+| Файл | Машина | Конфигурация |
+|------|--------|--------------|
+| `amar224.kdl` | amar224 | 3× 1920×1080 @ DP-2, DP-3, DP-4 — три монитора в ряд |
+| `amar319.kdl` | amar319 | 2× 1920×1080 @ DVI-I-1, HDMI-A-1 — два монитора |
+| `amar319-1.kdl` | amar319-1 | 1× 2560×1600 @ DVI-I-2 — Apple Cinema HD |
+| `default.kdl` | ноутбуки, прочие | auto/preferred — niri сам определяет параметры |
+
+Добавить конфиг для новой машины:
+```bash
+# Узнать имена и параметры выходов
+niri msg outputs
+
+# Создать файл конфига (имя файла = hostname машины)
+nano files/home/.config/niri/outputs/$(hostname).kdl
+
+# Применить
+make outputs
+```
 
 ### Блокировка и таймауты простоя
 
-Управляется через `swayidle`. Схема таймаутов:
+Управляется через `swayidle`, который запускается через `spawn-at-startup`
+в niri (не через systemd — из-за особенностей dbus-run-session окружения).
+
+Текущая схема таймаутов (`40-startup.kdl`):
 
 | Время простоя | Действие |
 |---------------|----------|
-| 5 мин (300 с) | Блокировка экрана (swaylock) |
-| 10 мин (600 с) | Выключить мониторы |
-| 30 мин (1800 с) | Suspend системы |
-| При засыпании | Блокировка перед сном |
-| После пробуждения | Включить мониторы |
+| 5 мин (300 с) | Блокировка экрана через `swaylock -f` |
+| 10 мин (600 с) | Выключить мониторы через `niri msg action power-off-monitors` |
+| При засыпании | Блокировка перед сном (`before-sleep`) |
 
 Изменить таймауты:
 ```bash
-nano ~/.config/systemd/user/swayidle.service
-systemctl --user daemon-reload
-systemctl --user restart swayidle.service
+nano ~/.config/niri/conf.d/40-startup.kdl
+# Числа — время в секундах: 300 = 5 мин, 600 = 10 мин
+
+# Применить (перезапускает swayidle)
+niri msg action reload-config
 ```
 
-Проверить статус:
+Проверить что swayidle запущен:
 ```bash
-systemctl --user status swayidle.service
+pgrep -a swayidle
 ```
 
 ### Waybar: раскладка клавиатуры
 
-Модуль `niri/language` использует полные XKB-имена. Проверить реальные:
+Модуль `niri/language` использует полные XKB-имена. Узнать реальные:
 
 ```bash
 niri msg --json keyboard-layouts | jq .
 ```
 
 Стандартные для `us+ru`: `"English (US)"` и `"Russian"`.
-Если у тебя другие — отредактировать `~/.config/waybar/config.jsonc`:
+Если имена отличаются — отредактировать `~/.config/waybar/config.jsonc`:
 
 ```jsonc
 "niri/language": {
@@ -336,59 +356,242 @@ niri msg --json keyboard-layouts | jq .
 }
 ```
 
-После правки: `pkill waybar && waybar &` или `make reload`.
+После правки:
+```bash
+pkill waybar && waybar &
+```
 
 ### Waybar: температура CPU
 
-Если модуль не показывает температуру:
+Если модуль `#temperature` не показывает значение:
 
 ```bash
-for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
+for f in /sys/class/hwmon/hwmon*/temp1_input; do
+    echo "$f: $(( $(cat $f) / 1000 ))°C"
+done
 ```
 
-Добавить в `~/.config/waybar/config.jsonc`:
+Добавить путь к нужному сенсору в `~/.config/waybar/config.jsonc`:
 
 ```jsonc
 "temperature": {
-  "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input"
+  "hwmon-path": "/sys/class/hwmon/hwmon0/temp1_input"
 }
 ```
+
+### Alacritty: мышь и буфер обмена
+
+- **Выделение левой кнопкой** → автоматически копирует в системный буфер обмена
+- **Правая кнопка** → вставляет из буфера обмена
+- **Ctrl+Shift+C / Ctrl+Shift+V** → копировать / вставить
+- **Ctrl+клик по URL** → открыть в браузере
 
 ---
 
 ## Биндинги Niri
 
+`Mod` = Super (клавиша Windows/Command).
+
+### Приложения
+
 | Клавиша | Действие |
 |---------|----------|
-| `Mod+Return` | Alacritty |
-| `Mod+D` | Fuzzel (лончер) |
-| `Mod+Q` | Закрыть окно |
-| `Mod+Shift+E` | Выйти из niri |
-| `Mod+←→↑↓` | Навигация по колонкам/окнам |
-| `Mod+Shift+←→↑↓` | Перемещение колонок/окон |
-| `Mod+1..9, Mod+0` | Воркспейсы 1-10 (независимые на каждом мониторе) |
-| `Mod+Shift+1..9, Mod+Shift+0` | Перенос колонки на воркспейс 1-10 |
-| `Mod+Page_Up/Down` | Соседний воркспейс |
-| `Mod+Tab` | Монитор вправо |
-| `Mod+Shift+Tab` | Монитор влево |
-| `Mod+Shift+,` | Перенести окно на монитор влево |
-| `Mod+Shift+.` | Перенести окно на монитор вправо |
-| `Mod+F` | Развернуть колонку |
+| `Mod+Return` | Открыть Alacritty (терминал) |
+| `Mod+D` | Открыть Fuzzel (лончер приложений) |
+| `Mod+Q` | Закрыть активное окно |
+| `Mod+Shift+E` | Выйти из niri (завершить сессию) |
+
+### Навигация по окнам
+
+| Клавиша | Действие |
+|---------|----------|
+| `Mod+←→` | Переключить фокус между колонками |
+| `Mod+↑↓` | Переключить фокус между окнами в колонке |
+| `Mod+Shift+←→` | Переместить колонку влево/вправо |
+| `Mod+Shift+↑↓` | Переместить окно вверх/вниз внутри колонки |
+
+### Размер и компоновка
+
+| Клавиша | Действие |
+|---------|----------|
+| `Mod+F` | Развернуть колонку на всю ширину экрана |
 | `Mod+Shift+F` | Полноэкранный режим |
-| `Mod+C` | Центрировать колонку |
-| `Mod+R` | Переключить пресет ширины |
-| `Mod+−/=` | Ширина колонки ±10% |
+| `Mod+C` | Центрировать активную колонку |
+| `Mod+R` | Циклически переключать пресеты ширины (33%/50%/67%/100%) |
+| `Mod+−` | Уменьшить ширину колонки на 10% |
+| `Mod+=` | Увеличить ширину колонки на 10% |
+
+### Воркспейсы
+
+Воркспейсы в niri **независимые на каждом мониторе**.
+
+| Клавиша | Действие |
+|---------|----------|
+| `Mod+1..9` | Переключить на воркспейс 1-9 текущего монитора |
+| `Mod+0` | Переключить на воркспейс 10 |
+| `Mod+Shift+1..9` | Перенести колонку на воркспейс 1-9 |
+| `Mod+Shift+0` | Перенести колонку на воркспейс 10 |
+| `Mod+Page_Up` | Переключить на воркспейс выше |
+| `Mod+Page_Down` | Переключить на воркспейс ниже |
+| `Mod+Shift+Page_Up` | Перенести колонку на воркспейс выше |
+| `Mod+Shift+Page_Down` | Перенести колонку на воркспейс ниже |
+
+### Мониторы
+
+| Клавиша | Действие |
+|---------|----------|
+| `Mod+Tab` | Перенести фокус на монитор вправо |
+| `Mod+Shift+Tab` | Перенести фокус на монитор влево |
+| `Mod+Shift+,` | Переместить окно на монитор влево |
+| `Mod+Shift+.` | Переместить окно на монитор вправо |
+
+### Блокировка и экран
+
+| Клавиша | Действие |
+|---------|----------|
 | `Mod+L` | Заблокировать экран (swaylock) |
-| `Mod+Shift+L` | Выключить мониторы |
+| `Mod+Shift+L` | Выключить мониторы (без блокировки) |
 | `Mod+Ctrl+L` | Заблокировать + выключить мониторы |
-| `Mod+V` | Cliphist picker |
-| `Print` | Скриншот области |
-| `Mod+Print` | Скриншот экрана |
-| `Shift+F1` | Mute / unmute звук |
+
+### Утилиты
+
+| Клавиша | Действие |
+|---------|----------|
+| `Mod+V` | Открыть историю буфера обмена (cliphist + fuzzel) |
+| `Print` | Скриншот выделенной области → `~/Pictures/` |
+| `Mod+Print` | Скриншот всего экрана → `~/Pictures/` |
+
+### Звук
+
+| Клавиша | Действие |
+|---------|----------|
+| `Shift+F1` | Mute / unmute |
 | `Shift+F2` | Громкость −5% |
 | `Shift+F3` | Громкость +5% |
-| `XF86Audio*` | Громкость — закомментировано в `50-binds.kdl`, раскомментировать при появлении медиаклавиш |
-| `XF86Brightness*` | Яркость — закомментировано в `50-binds.kdl`, раскомментировать при появлении медиаклавиш |
+| `XF86Audio*` | Медиаклавиши — **закомментированы** в `50-binds.kdl` |
+| `XF86Brightness*` | Яркость — **закомментированы** в `50-binds.kdl` |
+
+> Раскомментировать при появлении медиаклавиш:
+> ```bash
+> nano ~/.config/niri/conf.d/50-binds.kdl
+> make reload
+> ```
+
+---
+
+## Для владельца репозитория
+
+Этот раздел содержит настройки специфичные для автора репозитория.
+Обычным пользователям этот раздел не нужен.
+
+### SSH-ключ для GitHub
+
+Необходим для `git push` и клонирования по SSH.
+Генерируем ключ (если ещё нет):
+
+```bash
+ssh-keygen -t ed25519 -C "user@email" -f ~/.ssh/id_ed25519
+# Создаст два файла:
+#   ~/.ssh/id_ed25519      — приватный ключ (НИКОМУ не передавать)
+#   ~/.ssh/id_ed25519.pub  — публичный ключ (добавляем на GitHub)
+```
+
+Добавить публичный ключ на GitHub — выбери удобный способ:
+
+#### Вариант А — GitHub CLI
+
+```bash
+sudo pacman -S github-cli
+gh auth login
+
+# Меню:
+#   Account    → GitHub.com
+#   Protocol   → SSH
+#   Upload key → ~/.ssh/id_ed25519.pub
+#   Auth       → Login with a web browser
+#
+# На экране появится код ABCD-1234
+# Телефон → github.com/login/device → ввести код → подтвердить
+```
+
+#### Вариант Б — curl + Personal Access Token
+
+```bash
+# На телефоне: github.com → Settings → Developer settings
+#   → Tokens (classic) → New → scope: admin:public_key → Generate
+GITHUB_TOKEN="ghp_xxxxxxxxxxxxxxxxxxxx"
+
+curl -s -X POST \
+     -H "Authorization: token $GITHUB_TOKEN" \
+     -H "Accept: application/vnd.github+json" \
+     https://api.github.com/user/keys \
+     -d "{\"title\":\"arch-$(hostname)\",\"key\":\"$(cat ~/.ssh/id_ed25519.pub)\"}"
+```
+
+#### Вариант В — через USB-флешку
+
+```bash
+lsblk                              # найти имя флешки
+sudo mount /dev/sdb1 /mnt/usb
+cp ~/.ssh/id_ed25519.pub /mnt/usb/
+sudo umount /mnt/usb
+# На другом компьютере: github.com → Settings → SSH keys → New SSH key
+```
+
+#### Проверка
+
+```bash
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519
+ssh -T git@github.com
+# Hi Amar73! You've successfully authenticated...
+```
+
+### Клонирование по SSH (с правом на push)
+
+```bash
+mkdir -p ~/Amar73
+cd ~/Amar73
+git clone git@github.com:Amar73/arch-niri.git
+cd ~/Amar73/arch-niri
+chmod +x *.sh
+```
+
+### Настройка git на новой машине
+
+```bash
+git config --global user.email "user@email"
+git config --global user.name "user name"
+git config --global pull.rebase false
+
+# Проверить
+git config --list | grep user
+git remote -v
+# origin  git@github.com:Amar73/arch-niri.git (fetch)
+# origin  git@github.com:Amar73/arch-niri.git (push)
+```
+
+Если remote указывает на HTTPS — сменить на SSH:
+
+```bash
+git remote set-url origin git@github.com:Amar73/arch-niri.git
+```
+
+### /etc/hosts для SSH-инфраструктуры
+
+Для работы ProxyJump-цепочек из `.ssh/config` хосты должны резолвиться:
+
+```bash
+sudo tee -a /etc/hosts << 'EOF'
+192.168.1.100  amar
+192.168.1.101  wn75
+192.168.1.110  ui
+EOF
+
+# Проверить
+ping -c1 amar
+ssh -G amar224
+```
 
 ---
 
@@ -400,34 +603,38 @@ for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
 - `rsync --delete` — защита от пустого src в `sync.sh` и `install.sh`
 - `trap EXIT` в `install_yay()` — явная очистка tmpdir
 - `paru` → `yay` везде
-- `qt5-compat` (несуществующий) → `qt5-wayland` через yay с `|| true`
-- `bibata-cursor-theme` → перенесён в AUR (yay)
+- `qt5-compat` → `qt5-wayland` через yay с `|| true`
+- `bibata-cursor-theme` → перенесён в AUR
 - Добавлены пропущенные пакеты: `wireplumber`, `pipewire-pulse`, `pulsemixer`, `jq`, `xdg-desktop-portal-gtk`
-- `need git/rsync` → `install.sh` сам ставит их на чистом Arch
 - `waybar.service enable` → убран (waybar стартует через `niri spawn-at-startup`)
-- CSS-переменные в `waybar/style.css` → прямые hex-значения (GTK CSS не поддерживает `var()`)
-- `#window:empty` и дочерние селекторы `>` → убраны (не поддерживаются GTK CSS)
-- `focus-monitor-next/prev` → заменены на `focus-monitor-right/left` (нет в niri 25.11)
-- `[hints]` в `alacritty.toml` → переведён в `[[hints.enabled]]` (TOML multiline fix)
+- CSS-переменные в `waybar/style.css` → прямые hex-значения
+- `#window:empty` и `>` селекторы → убраны (GTK CSS не поддерживает)
+- `focus-monitor-next/prev` → `focus-monitor-right/left` (нет в niri 25.11)
+- `[hints]` в `alacritty.toml` → `[[hints.enabled]]` (TOML multiline fix)
 - `shell` в `alacritty.toml` → перенесён из `[general]` в `[terminal]`
-- Мёртвая переменная `REPO_URL="${2:-}"` убрана из `bootstrap-dotfiles.sh`
+- PS1 `git_status()` — `$'\033'` вместо `"\033"`, `\001`/`\002` для правильного подсчёта длины строки
+- `swayidle` → перенесён из systemd в `spawn-at-startup` (D-Bus доступен в окружении niri)
 
 ### Новое
 
-| Файл | Описание |
-|------|----------|
-| `alacritty/alacritty.toml` | Catppuccin Mocha, beam cursor, 10k scrollback, URL hints |
-| `swaylock/config` | Catppuccin Mocha, согласован с waybar |
+| Компонент | Описание |
+|-----------|----------|
+| `alacritty/alacritty.toml` | Catppuccin Mocha, Underline cursor, 10k scrollback, ПКМ=вставка |
+| `swaylock/config` | Catppuccin Mocha |
 | `waybar/config.jsonc` | niri/workspaces, window, cpu, mem, disk, temp, audio, net, lang |
-| `waybar/style.css` | Catppuccin Mocha, прямые hex-значения, без CSS-переменных |
-| `cliphist-text.service` | История текстового буфера обмена |
+| `waybar/style.css` | Catppuccin Mocha, прямые hex |
+| `cliphist-text.service` | История текстового буфера |
 | `cliphist-images.service` | История буфера изображений |
 | `check-local.sh` + `make check-local` | Синтаксис + структура без pacman/systemctl |
 | `update.sh` + `make update` | Комплексное обновление системы |
 | `deploy-outputs.sh` + `make outputs` | Авто-деплой конфига мониторов по hostname |
 | `niri/outputs/*.kdl` | Конфиги мониторов для amar224, amar319, amar319-1, default |
-| `50-binds.kdl` | Воркспейсы 1-10, мониторы, Shift+F1/F2/F3 для звука |
-| `/usr/local/bin/niri-start` | Wrapper: `dbus-run-session niri`, создаётся при `make install` |
+| `install-packages.sh` + `make packages` | Установка пакетов из `packages/*.txt` |
+| `packages/base.txt` | Базовый набор ПО для всех машин |
+| `packages/niri.txt` | Пакеты niri-стека |
+| `packages/aur.txt` | AUR-пакеты |
+| `50-binds.kdl` | Воркспейсы 1-10, мониторы, Shift+F1/F2/F3, Mod+L блокировка |
+| `/usr/local/bin/niri-start` | Wrapper `dbus-run-session niri` |
 
 ---
 
@@ -435,49 +642,54 @@ for f in /sys/class/hwmon/hwmon*/temp1_input; do echo "$f: $(cat $f)"; done
 
 ```
 arch-niri/
-├── Makefile
-├── install.sh
-├── deploy-outputs.sh
-├── check-local.sh
-├── post-install-check.sh
-├── sync.sh
-├── update.sh
-├── logs.sh
-├── backup.sh
-├── bootstrap-dotfiles.sh
+├── Makefile                        — цели для управления системой
+├── install.sh                      — полная установка с нуля
+├── install-packages.sh             — установка пакетов из packages/
+├── deploy-outputs.sh               — деплой конфига мониторов по hostname
+├── check-local.sh                  — проверка без pacman/systemctl
+├── post-install-check.sh           — полная проверка на живой системе
+├── sync.sh                         — синхронизация конфигов + smoke-check
+├── update.sh                       — обновление системы
+├── logs.sh                         — просмотр логов сервисов
+├── backup.sh                       — резервная копия конфигов
+├── bootstrap-dotfiles.sh           — деплой dotfiles из репо или git URL
+├── packages/
+│   ├── base.txt                    — базовые пакеты (все машины)
+│   ├── niri.txt                    — пакеты niri-стека
+│   └── aur.txt                     — пакеты из AUR
 └── files/
-    ├── etc/greetd/config.toml
+    ├── etc/greetd/config.toml      — конфиг display manager
     └── home/
-        ├── .bashrc
-        ├── .ssh/config
+        ├── .bashrc                 — bash: PS1, алиасы, keychain, git-функции
+        ├── .ssh/config             — SSH с ProxyJump цепочками
         └── .config/
             ├── niri/
-            │   ├── config.kdl
+            │   ├── config.kdl      — главный конфиг (include conf.d)
             │   ├── conf.d/
-            │   │   ├── 10-input.kdl
-            │   │   ├── 20-layout.kdl
-            │   │   ├── 30-environment.kdl
-            │   │   ├── 40-startup.kdl
-            │   │   ├── 50-binds.kdl
-            │   │   ├── 60-outputs.kdl  ← создаётся deploy-outputs.sh
-            │   │   └── keymap.xkb
+            │   │   ├── 10-input.kdl        — клавиатура, тачпад, мышь
+            │   │   ├── 20-layout.kdl       — gaps, ширина колонок
+            │   │   ├── 30-environment.kdl  — Wayland env переменные
+            │   │   ├── 40-startup.kdl      — автозапуск: waybar, mako, swaybg, swayidle
+            │   │   ├── 50-binds.kdl        — биндинги клавиш
+            │   │   ├── 60-outputs.kdl      — ← создаётся deploy-outputs.sh
+            │   │   └── keymap.xkb          — Alt_L=EN, Alt_R=RU
             │   └── outputs/
-            │       ├── amar224.kdl
-            │       ├── amar319.kdl
-            │       ├── amar319-1.kdl
-            │       └── default.kdl
-            ├── alacritty/alacritty.toml
-            ├── swaylock/config
+            │       ├── amar224.kdl         — 3× 1920×1080 @ DP-2, DP-3, DP-4
+            │       ├── amar319.kdl         — 2× 1920×1080 @ DVI-I-1, HDMI-A-1
+            │       ├── amar319-1.kdl       — 1× 2560×1600 @ DVI-I-2
+            │       └── default.kdl         — auto для ноутбуков
+            ├── alacritty/alacritty.toml    — терминал: Catppuccin Mocha
+            ├── swaylock/config             — блокировщик: Catppuccin Mocha
             ├── waybar/
-            │   ├── config.jsonc
-            │   └── style.css
-            ├── mako/config
-            ├── fuzzel/fuzzel.ini
-            ├── qt6ct/qt6ct.conf
-            ├── gtk-3.0/settings.ini
-            ├── gtk-4.0/settings.ini
+            │   ├── config.jsonc            — модули waybar для niri
+            │   └── style.css               — Catppuccin Mocha
+            ├── mako/config                 — уведомления
+            ├── fuzzel/fuzzel.ini           — лончер
+            ├── qt6ct/qt6ct.conf            — Qt6 тема/шрифты
+            ├── gtk-3.0/settings.ini        — GTK3 тема/иконки/курсор
+            ├── gtk-4.0/settings.ini        — GTK4 тема/иконки/курсор
             └── systemd/user/
-                ├── swayidle.service
-                ├── cliphist-text.service
-                └── cliphist-images.service
+                ├── swayidle.service        — таймауты простоя (резерв)
+                ├── cliphist-text.service   — история текстового буфера
+                └── cliphist-images.service — история буфера изображений
 ```

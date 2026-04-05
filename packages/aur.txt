@@ -1,0 +1,31 @@
+# =============================================================================
+# packages/aur.txt — пакеты из AUR (устанавливаются через yay)
+# Формат: один пакет на строку, комментарии начинаются с #
+#
+# Установка:
+#   grep -v '^#' packages/aur.txt | grep -v '^$' | xargs yay -S --needed
+# =============================================================================
+
+# --- Cursors ---
+bibata-cursor-theme
+
+# --- Qt5 Wayland ---
+qt5-wayland
+
+# --- Браузеры ---
+google-chrome
+brave-bin
+
+# --- Облако ---
+yandex-disk
+
+# --- Почта ---
+birdtray                       # Трей-иконка для Thunderbird
+
+# --- Мониторинг ---
+neohtop                        # TUI системный монитор в браузере
+lazydocker                     # TUI для управления Docker-контейнерами
+
+# --- Wayland-утилиты ---
+xwaylandvideobridge            # Шаринг экрана через XWayland (Discord, Zoom, Teams)
+ydotool                        # Эмуляция ввода на Wayland (нужен для автоматизации)
