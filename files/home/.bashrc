@@ -349,14 +349,11 @@ if command -v keychain >/dev/null 2>&1; then
     [[ -f ~/.ssh/id_rsa     ]] && keys+=(~/.ssh/id_rsa)
 
     if [[ ${#keys[@]} -gt 0 ]]; then
-        # --quiet   — не выводить приветствие
-        # --agents ssh — использовать только ssh-agent (без gpg-agent)
-        # Без --noask: ключ добавляется при старте, парольная фраза
-        # запрашивается один раз за сессию если ключ ею защищён
-        eval "$(keychain --quiet --agents ssh "${keys[@]}")"
+        # --quiet — не выводить приветствие
+        # Парольная фраза запрашивается один раз за сессию
+        eval "$(keychain --quiet "${keys[@]}")"
     else
-        # Ключей нет — просто запускаем агент без ключей
-        eval "$(keychain --quiet --agents ssh)"
+        eval "$(keychain --quiet)"
     fi
 else
     _SSH_ENV="$HOME/.ssh/agent.env"
