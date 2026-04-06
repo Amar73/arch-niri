@@ -121,15 +121,19 @@ make logs     # просмотр логов всех сервисов текущ
    - `seatd` — управление seat (доступ к устройствам без root)
    - `greetd` — display manager, запускает niri после логина
 
-4. **Добавление в группы** — `video`, `input`, `seat`.
+4. **Настройка локали** — создание `/etc/locale.conf` с `LANG=ru_RU.UTF-8`.
+   Необходимо для русского интерфейса приложений (браузеры, редакторы и др.).
+   Если файл уже существует — не перезаписывается.
+
+5. **Добавление в группы** — `video`, `input`, `seat`.
    Без этих групп niri не получит доступ к GPU и устройствам ввода.
 
-5. **Установка `yay`** — сборка из AUR (`git clone` + `makepkg`).
+6. **Установка `yay`** — сборка из AUR (`git clone` + `makepkg`).
    Нужен `base-devel`. Пропускается если yay уже установлен.
 
-6. **AUR-пакеты** — `bibata-cursor-theme` (курсор), `qt5-wayland`.
+7. **AUR-пакеты** — `bibata-cursor-theme` (курсор), `qt5-wayland`.
 
-7. **Создание `/usr/local/bin/niri-start`** — wrapper-скрипт для greetd:
+8. **Создание `/usr/local/bin/niri-start`** — wrapper-скрипт для greetd:
    ```bash
    #!/bin/bash
    exec dbus-run-session niri
@@ -138,16 +142,16 @@ make logs     # просмотр логов всех сервисов текущ
    правильным D-Bus, который не поднимается через greetd. `dbus-run-session`
    создаёт изолированную D-Bus сессию для niri.
 
-8. **`rsync` конфигов** — синхронизация `files/home/.config/` в `~/.config/`.
+9. **`rsync` конфигов** — синхронизация `files/home/.config/` в `~/.config/`.
    Использует `--delete` с защитой от пустого источника.
 
-9. **Деплой `.bashrc` и `.ssh/config`** — с бэкапом существующих файлов
-   (добавляется суффикс `.bak.TIMESTAMP`).
+10. **Деплой `.bashrc` и `.ssh/config`** — с бэкапом существующих файлов
+    (добавляется суффикс `.bak.TIMESTAMP`).
 
-10. **Деплой конфига мониторов** — `deploy-outputs.sh` определяет hostname,
+11. **Деплой конфига мониторов** — `deploy-outputs.sh` определяет hostname,
     копирует нужный `outputs/hostname.kdl` в `conf.d/60-outputs.kdl`.
 
-11. **Включение user-сервисов** — `swayidle` (таймауты блокировки),
+12. **Включение user-сервисов** — `swayidle` (таймауты блокировки),
     `cliphist-text` и `cliphist-images` (история буфера обмена).
 
 ### Устанавливаемые пакеты (make install)

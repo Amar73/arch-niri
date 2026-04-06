@@ -64,6 +64,27 @@ enable_system_services() {
   sudo systemctl enable greetd.service
 }
 
+setup_locale() {
+  log "Настройка локали"
+  # Генерируем обе локали если ещё не сгенерированы
+  if ! locale -a 2>/dev/null | grep -q "ru_RU.utf8"; then
+    sudo sed -i 's/^#en_US.UTF-8/en_US.UTF-8/' /etc/locale.gen
+    sudo sed -i 's/^#ru_RU.UTF-8/ru_RU.UTF-8/' /etc/locale.gen
+    sudo locale-gen
+  fi
+  # Выставляем русский LANG чтобы приложения (браузеры и др.) были на русском
+  # LC_COLLATE=C — быстрая сортировка в терминале без регистрозависимых проблем
+  if [[ ! -f /etc/locale.conf ]] || ! grep -q "LANG=" /etc/locale.conf; then
+    sudo tee /etc/locale.conf > /dev/null << 'EOF'
+LANG=ru_RU.UTF-8
+LC_COLLATE=C
+EOF
+    echo "[OK] /etc/locale.conf создан (LANG=ru_RU.UTF-8)"
+  else
+    echo "[OK] /etc/locale.conf уже существует: $(cat /etc/locale.conf | head -1)"
+  fi
+}
+
 add_groups() {
   log "Добавление пользователя в группы"
   sudo usermod -aG video,input,seat "$USER" || true
@@ -175,6 +196,7 @@ main() {
 
   install_official_packages
   enable_system_services
+  setup_locale
   add_groups
   install_yay
   install_aur_packages
