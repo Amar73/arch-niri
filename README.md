@@ -350,6 +350,34 @@ niri msg action load-config-file
 pgrep -a swayidle
 ```
 
+### Midnight Commander
+
+Конфиг mc деплоится автоматически при `make install` и `make sync`.
+
+Файлы в репо:
+- `files/home/.config/mc/ini` — основной конфиг (скин, редактор, панели)
+- `files/home/.config/mc/skins/catppuccin-mocha.ini` — тема Catppuccin Mocha
+
+Если рамки панелей не отображаются (символы псевдографики) — проверь `TERM`:
+
+```bash
+echo $TERM   # должно быть xterm-256color
+```
+
+`TERM=xterm-256color` прописан в `30-environment.kdl` и применяется автоматически.
+
+Сменить скин вручную — **F9 → Настройки → Внешний вид** или:
+
+```bash
+mc --skin=catppuccin-mocha
+```
+
+Доступные встроенные скины:
+
+```bash
+ls /usr/share/mc/skins/
+```
+
 ### Waybar: раскладка клавиатуры
 
 Модуль `niri/language` использует полные XKB-имена. Узнать реальные:
@@ -500,8 +528,8 @@ Mod+B { spawn "yandex-browser-stable"; }
 | Клавиша | Действие |
 |---------|----------|
 | `Mod+V` | Открыть историю буфера обмена (cliphist + fuzzel) |
-| `Print` | Скриншот выделенной области → `~/Pictures/` |
-| `Mod+Print` | Скриншот всего экрана → `~/Pictures/` |
+| `Print` | Скриншот выделенной области → `~/Screenshots/` |
+| `Mod+Print` | Скриншот всего экрана → `~/Screenshots/` |
 
 ### Звук
 
@@ -727,6 +755,10 @@ arch-niri/
             │   └── style.css               — Catppuccin Mocha
             ├── mako/config                 — уведомления
             ├── fuzzel/fuzzel.ini           — лончер
+            ├── mc/
+            │   ├── ini                     — основной конфиг mc
+            │   └── skins/
+            │       └── catppuccin-mocha.ini — тема Catppuccin Mocha
             ├── qt6ct/qt6ct.conf            — Qt6 тема/шрифты
             ├── gtk-3.0/settings.ini        — GTK3 тема/иконки/курсор
             ├── gtk-4.0/settings.ini        — GTK4 тема/иконки/курсор

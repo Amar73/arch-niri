@@ -100,10 +100,10 @@ binds {
     }
 
     Print {
-        spawn "sh" "-c" "grim -g \"$(slurp)\" \"$HOME/Pictures/screen-$(date +%F-%H%M%S).png\""
+        spawn "sh" "-c" "mkdir -p \"$HOME/Screenshots\" && grim -g \"$(slurp)\" \"$HOME/Screenshots/screen-$(date +%F-%H%M%S).png\""
     }
 
     Mod+Print {
-        spawn "sh" "-c" "grim \"$HOME/Pictures/screen-$(date +%F-%H%M%S).png\""
+        spawn "sh" "-c" "mkdir -p \"$HOME/Screenshots\" && grim \"$HOME/Screenshots/screen-$(date +%F-%H%M%S).png\""
     }
 }

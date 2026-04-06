@@ -65,6 +65,8 @@ expected_files=(
   "home/.config/systemd/user/swayidle.service"
   "home/.config/systemd/user/cliphist-text.service"
   "home/.config/systemd/user/cliphist-images.service"
+  "home/.config/mc/ini"
+  "home/.config/mc/skins/catppuccin-mocha.ini"
 )
 
 for rel in "${expected_files[@]}"; do

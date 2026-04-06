@@ -142,7 +142,7 @@ deploy_files() {
 
   rsync -a --delete "$config_src/" "${HOME}/.config/"
 
-  mkdir -p "${HOME}/Pictures"
+  mkdir -p "${HOME}/Screenshots"
   deploy_dotfiles
 
   # Деплой конфига мониторов по hostname
