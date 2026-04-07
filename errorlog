@@ -1,3 +1,19 @@
+19:46:11 amar@amar319-1:~/Amar73/arch-niri (main)
+✓ $ gl
+Enter passphrase for key '/home/amar/.ssh/id_ed25519':
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 3 (delta 2), reused 3 (delta 2), pack-reused 0 (from 0)
+Распаковка объектов: 100% (3/3), 581 bytes | 581.00 KiB/s, готово.
+Из github.com:Amar73/arch-niri
+ * branch            main       -> FETCH_HEAD
+   c056b18..45dcc98  main       -> origin/main
+Обновление c056b18..45dcc98
+Fast-forward
+ post-install-check.sh | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+20:14:29 amar@amar319-1:~/Amar73/arch-niri (main)
 ✓ $ make check
 ./post-install-check.sh
 === commands ===
@@ -94,9 +110,9 @@
 [OK]   niri config valid
 
 === niri keyboard layouts ===
-jq: error (at <stdin>:1): Cannot index null with null
-make: *** [Makefile:9: check] Ошибка 5
-19:26:53 amar@amar319-1:~/Amar73/arch-niri (main)
+WARN: неожиданная структура JSON: {"names":["English (US)","Russian"],"current_idx":0}
+[OK]   keyboard-layouts IPC работает
+20:15:15 amar@amar319-1:~/Amar73/arch-niri (main)
 ✓ $ make logs
 ./logs.sh
 ===== greetd =====
@@ -126,3 +142,12 @@ make: *** [Makefile:9: check] Ошибка 5
   UNIT LOAD ACTIVE SUB DESCRIPTION
 
 0 loaded units listed.
+20:15:30 amar@amar319-1:~/Amar73/arch-niri (main)
+✓ $ niri msg --json keyboard-layouts | jq
+{
+  "names": [
+    "English (US)",
+    "Russian"
+  ],
+  "current_idx": 0
+}
