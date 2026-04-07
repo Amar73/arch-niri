@@ -35,11 +35,10 @@
   // LEFT
   // --------------------------------------------------------------------------
   "niri/workspaces": {
-    "format": "{icon}",
+    "format": "{icon}{value}",
     "format-icons": {
-      "active":  "󰮯",
-      "default": "󰊠",
-      "empty":   "󰋙"
+      "active":  ", ",
+      "default": "",
     },
     "on-click": "activate",
     "all-outputs": false
