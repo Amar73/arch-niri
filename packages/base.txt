@@ -125,3 +125,7 @@ docker
 
 # --- Безопасность ---
 keepassxc
+
+# --- Заметки ---
+obsidian
+obsidian-icon-theme

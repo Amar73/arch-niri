@@ -104,9 +104,19 @@ niri validate >/dev/null 2>&1 \
 echo
 echo "=== niri keyboard layouts ==="
 if niri msg --json keyboard-layouts >/dev/null 2>&1; then
-  niri msg --json keyboard-layouts | jq -r \
-    '"Layouts: " + ([.keyboard_layouts.layouts[].name] | join(", ")) +
-     "\nActive:  " + .keyboard_layouts.layouts[.keyboard_layouts.current_idx].name'
+  _kl_json="$(niri msg --json keyboard-layouts 2>/dev/null)"
+  _kl_out="$(echo "$_kl_json" | jq -r '
+    if .names != null then
+      "Layouts: " + (.names | join(", ")) +
+      "\nActive:  " + (.names[.current_idx] // "?")
+    elif .keyboard_layouts != null and .keyboard_layouts.layouts != null then
+      "Layouts: " + ([.keyboard_layouts.layouts[].name] | join(", ")) +
+      "\nActive:  " + (.keyboard_layouts.layouts[.keyboard_layouts.current_idx].name // "?")
+    else
+      "WARN: неожиданная структура JSON: " + (. | tostring)
+    end
+  ' 2>/dev/null || echo "WARN: jq не смог распарсить ответ niri")"
+  echo "$_kl_out"
   ok "keyboard-layouts IPC работает"
 else
   warn "niri msg --json keyboard-layouts недоступен — запущен ли niri?"

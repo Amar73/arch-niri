@@ -1,80 +1,153 @@
-17:02:53 amar@amar319-1:~
-✓ $ yandex-browser
-bash: yandex-browser: command not found
-17:03:06 amar@amar319-1:~
-✓ $ yandex-browser-ru
-/usr/local/bin/yandex-browser-ru: строка 2: exec: uandex-browser: не найден
-17:03:18 amar@amar319-1:~
-✓ $ LANG=ru_RU.UTF-8 yandex-browser
-bash: yandex-browser: command not found
-17:03:58 amar@amar319-1:~
-✓ $ LANG=ru_RU.UTF-8 yandex-browser-
-yandex-browser-ru      yandex-browser-stable
-17:03:58 amar@amar319-1:~
-✓ $ LANG=ru_RU.UTF-8 yandex-browser-stable
-/usr/lib64/ffmpeg-plugin-browser/libffmpeg.so: Ffmpeg not found.
-/opt/yandex/browser/libffmpeg.so: Ffmpeg version is OK! Let's use it.
-[1026:1026:0405/170415.247581:ERROR:isolated_origin_util.cc:75] Ignoring port number in isolated origin: chrome://custo
-[1026:1026:0405/170415.354430:ERROR:components/enterprise/browser/controller/chrome_browser_cloud_management_controller.cc:348] Cloud management controller initialization aborted as CBCM is not enabled.
-[1026:1026:0405/170415.467121:ERROR:chrome/browser/yandex/anti_tracking_service.cc:163] [CORP] YandexAntiTracking. Status: Политика отключена.
-[1026:1113:0405/170416.984479:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[1026:1113:0405/170416.984492:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[1026:1113:0405/170416.984495:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 149
-[1026:1113:0405/170416.984503:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[1026:1113:0405/170416.984506:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[1026:1113:0405/170416.984508:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 249
-[1026:1113:0405/170416.984515:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[1026:1113:0405/170416.984518:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[1026:1113:0405/170416.984520:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 277
-[1026:1113:0405/170416.984526:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[1026:1113:0405/170416.984529:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[1026:1113:0405/170416.984532:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 278
-[1026:1113:0405/170416.984539:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[1026:1113:0405/170416.984542:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[1026:1113:0405/170416.984545:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 286
-[1026:1113:0405/170416.984551:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[1026:1113:0405/170416.984554:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[1026:1113:0405/170416.984557:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 300
-[1026:1113:0405/170416.984563:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[1026:1113:0405/170416.984570:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[1026:1113:0405/170416.984573:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 318
-[1026:1026:0405/170417.257376:ERROR:object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.Properties.Get: object_path= /org/freedesktop/portal/desktop: org.freedesktop.DBus.Error.InvalidArgs: No such interface “org.freedesktop.portal.FileChooser”
-[1085:1090:0405/170419.740991:ERROR:ssl_client_socket_impl.cc:1137] handshake failed; returned -1, SSL error code 1, net_error -202
-[1026:1055:0405/170420.464976:ERROR:registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
-[1078:1078:0405/170424.391323:ERROR:gl_surface_presentation_helper.cc:260] GetVSyncParametersIfAvailable() failed for 1 times!
-[1078:1078:0405/170424.395982:ERROR:gl_surface_presentation_helper.cc:260] GetVSyncParametersIfAvailable() failed for 2 times!
-[1078:1078:0405/170424.412604:ERROR:gl_surface_presentation_helper.cc:260] GetVSyncParametersIfAvailable() failed for 3 times!
-^C17:04:35 amar@amar319-1:~
-✓ $ yandex-browser-stable
-/usr/lib64/ffmpeg-plugin-browser/libffmpeg.so: Ffmpeg not found.
-/opt/yandex/browser/libffmpeg.so: Ffmpeg version is OK! Let's use it.
-[2440:2440:0405/170457.237624:ERROR:isolated_origin_util.cc:75] Ignoring port number in isolated origin: chrome://custo
-[2440:2440:0405/170457.243475:ERROR:components/enterprise/browser/controller/chrome_browser_cloud_management_controller.cc:348] Cloud management controller initialization aborted as CBCM is not enabled.
-[2440:2440:0405/170457.252106:ERROR:chrome/browser/yandex/anti_tracking_service.cc:163] [CORP] YandexAntiTracking. Status: This policy is disabled.
-[2440:2467:0405/170457.416755:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[2440:2467:0405/170457.416788:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[2440:2467:0405/170457.416799:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 149
-[2440:2467:0405/170457.416813:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[2440:2467:0405/170457.417028:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[2440:2467:0405/170457.417049:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 249
-[2440:2467:0405/170457.417070:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[2440:2467:0405/170457.417087:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[2440:2467:0405/170457.417101:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 277
-[2440:2467:0405/170457.417119:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[2440:2467:0405/170457.417135:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[2440:2467:0405/170457.417149:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 278
-[2440:2467:0405/170457.417167:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[2440:2467:0405/170457.417185:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[2440:2467:0405/170457.417197:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 286
-[2440:2467:0405/170457.417215:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[2440:2467:0405/170457.417230:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[2440:2467:0405/170457.417245:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 300
-[2440:2467:0405/170457.417260:ERROR:parsed_gpu_control_list.cc:156] Can't find key: disable_direct_composition
-[2440:2467:0405/170457.417276:ERROR:parsed_gpu_control_list.cc:707] disable_direct_composition
-[2440:2467:0405/170457.417287:ERROR:parsed_gpu_control_list.cc:849] ParseFeatures failed: 318
-[2440:2440:0405/170457.583216:ERROR:object_proxy.cc:573] Failed to call method: org.freedesktop.DBus.Properties.Get: object_path= /org/freedesktop/portal/desktop: org.freedesktop.DBus.Error.InvalidArgs: No such interface “org.freedesktop.portal.FileChooser”
-[2486:2494:0405/170459.940535:ERROR:ssl_client_socket_impl.cc:1137] handshake failed; returned -1, SSL error code 1, net_error -202
-[2440:2469:0405/170500.361413:ERROR:registration_request.cc:291] Registration response error message: DEPRECATED_ENDPOINT
-[2485:2485:0405/170501.345288:ERROR:gl_surface_presentation_helper.cc:260] GetVSyncParametersIfAvailable() failed for 1 times!
-[2485:2485:0405/170501.361301:ERROR:gl_surface_presentation_helper.cc:260] GetVSyncParametersIfAvailable() failed for 2 times!
-[2485:2485:0405/170504.351776:ERROR:gl_surface_presentation_helper.cc:260] GetVSyncParametersIfAvailable() failed for 3 times!
+19:46:11 amar@amar319-1:~/Amar73/arch-niri (main)
+✓ $ gl
+Enter passphrase for key '/home/amar/.ssh/id_ed25519':
+remote: Enumerating objects: 5, done.
+remote: Counting objects: 100% (5/5), done.
+remote: Compressing objects: 100% (1/1), done.
+remote: Total 3 (delta 2), reused 3 (delta 2), pack-reused 0 (from 0)
+Распаковка объектов: 100% (3/3), 581 bytes | 581.00 KiB/s, готово.
+Из github.com:Amar73/arch-niri
+ * branch            main       -> FETCH_HEAD
+   c056b18..45dcc98  main       -> origin/main
+Обновление c056b18..45dcc98
+Fast-forward
+ post-install-check.sh | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+20:14:29 amar@amar319-1:~/Amar73/arch-niri (main)
+✓ $ make check
+./post-install-check.sh
+=== commands ===
+[OK]   command: niri
+[OK]   command: niri-session
+[OK]   command: alacritty
+[OK]   command: fuzzel
+[OK]   command: mako
+[OK]   command: waybar
+[OK]   command: swayidle
+[OK]   command: swaylock
+[OK]   command: wl-paste
+[OK]   command: cliphist
+[OK]   command: tuigreet
+[OK]   command: nwg-look
+[OK]   command: qt6ct
+[OK]   command: ssh
+[OK]   command: keychain
+[OK]   command: yay
+[OK]   command: btop
+[OK]   command: jq
+[OK]   command: pulsemixer
+
+=== package checks ===
+[OK]   package: niri
+[OK]   package: greetd
+[OK]   package: greetd-tuigreet
+[OK]   package: alacritty
+[OK]   package: fuzzel
+[OK]   package: mako
+[OK]   package: waybar
+[OK]   package: swayidle
+[OK]   package: swaylock
+[OK]   package: btop
+[OK]   package: jq
+[OK]   package: wl-clipboard
+[OK]   package: cliphist
+[OK]   package: xdg-desktop-portal
+[OK]   package: xdg-desktop-portal-wlr
+[OK]   package: xdg-desktop-portal-gtk
+[OK]   package: pipewire
+[OK]   package: wireplumber
+[OK]   package: pipewire-pulse
+[OK]   package: pulsemixer
+[OK]   package: qt6ct
+[OK]   package: kvantum
+[OK]   package: nwg-look
+[OK]   package: noto-fonts
+[OK]   package: papirus-icon-theme
+[OK]   package: keychain
+[OK]   package: openssh
+
+=== optional packages ===
+[OK]   package: qt5-wayland
+
+=== AUR packages ===
+[OK]   package: bibata-cursor-theme (AUR)
+
+=== config files ===
+[OK]   file: /etc/greetd/config.toml
+[OK]   file: /home/amar/.bashrc
+[OK]   file: /home/amar/.ssh/config
+[OK]   file: /home/amar/.config/niri/config.kdl
+[OK]   file: /home/amar/.config/niri/conf.d/keymap.xkb
+[OK]   file: /home/amar/.config/alacritty/alacritty.toml
+[OK]   file: /home/amar/.config/waybar/config.jsonc
+[OK]   file: /home/amar/.config/waybar/style.css
+[OK]   file: /home/amar/.config/swaylock/config
+[OK]   file: /home/amar/.config/systemd/user/swayidle.service
+[OK]   file: /home/amar/.config/systemd/user/cliphist-text.service
+[OK]   file: /home/amar/.config/systemd/user/cliphist-images.service
+[OK]   file: /home/amar/.config/mako/config
+[OK]   file: /home/amar/.config/fuzzel/fuzzel.ini
+[OK]   file: /home/amar/.config/qt6ct/qt6ct.conf
+[OK]   file: /home/amar/.config/gtk-3.0/settings.ini
+[OK]   file: /home/amar/.config/gtk-4.0/settings.ini
+
+=== syntax checks ===
+[OK]   bashrc syntax valid
+[OK]   ssh config parses
+
+=== system services ===
+[OK]   NetworkManager enabled
+[OK]   seatd enabled
+[OK]   greetd enabled
+
+=== user services ===
+[OK]   swayidle.service enabled
+[OK]   cliphist-text.service enabled
+[OK]   cliphist-images.service enabled
+
+=== niri-start wrapper ===
+[OK]   /usr/local/bin/niri-start exists and executable
+[OK]   niri config valid
+
+=== niri keyboard layouts ===
+WARN: неожиданная структура JSON: {"names":["English (US)","Russian"],"current_idx":0}
+[OK]   keyboard-layouts IPC работает
+20:15:15 amar@amar319-1:~/Amar73/arch-niri (main)
+✓ $ make logs
+./logs.sh
+===== greetd =====
+апр 07 19:24:28 amar319-1 systemd[1]: Started Greeter daemon.
+апр 07 19:24:28 amar319-1 greetd[554]: config: Config { file: ConfigFile { terminal: ConfigTerminal { vt: Specific(1), switch: true }, general: ConfigGeneral { source_profile: true, runfile: "/run/greetd.run", service: "greetd" }, default_session: ConfigSession { command: "tuigreet --time --remember --remember-user-session --asterisks --cmd /usr/local/bin/niri-start", user: "greeter", service: "greetd-greeter" }, initial_session: None }, internal: ConfigInternal { session_worker: 0 } }
+апр 07 19:24:28 amar319-1 greetd[555]: config: Config { file: ConfigFile { terminal: ConfigTerminal { vt: None, switch: false }, general: ConfigGeneral { source_profile: true, runfile: "/run/greetd.run", service: "greetd" }, default_session: ConfigSession { command: "", user: "", service: "" }, initial_session: None }, internal: ConfigInternal { session_worker: 11 } }
+апр 07 19:24:28 amar319-1 greetd[555]: pam_unix(greetd:session): session opened for user greeter(uid=964) by greeter(uid=0)
+апр 07 19:25:27 amar319-1 greetd[723]: config: Config { file: ConfigFile { terminal: ConfigTerminal { vt: None, switch: false }, general: ConfigGeneral { source_profile: true, runfile: "/run/greetd.run", service: "greetd" }, default_session: ConfigSession { command: "", user: "", service: "" }, initial_session: None }, internal: ConfigInternal { session_worker: 12 } }
+апр 07 19:25:38 amar319-1 greetd[723]: pam_unix(greetd:session): session opened for user amar(uid=1000) by amar(uid=0)
+
+===== waybar =====
+-- No entries --
+
+===== swayidle.service =====
+-- No entries --
+
+===== cliphist-text.service =====
+-- No entries --
+
+===== cliphist-images.service =====
+-- No entries --
+
+===== failed units =====
+  UNIT LOAD ACTIVE SUB DESCRIPTION
+
+0 loaded units listed.
+  UNIT LOAD ACTIVE SUB DESCRIPTION
+
+0 loaded units listed.
+20:15:30 amar@amar319-1:~/Amar73/arch-niri (main)
+✓ $ niri msg --json keyboard-layouts | jq
+{
+  "names": [
+    "English (US)",
+    "Russian"
+  ],
+  "current_idx": 0
+}
