@@ -1,4 +1,3 @@
-// Обои для amar224 — один процесс swaybg, три выхода
+// Обои — запуск через wrapper-скрипт ~/.local/bin/set-wallpapers
 // Деплоится автоматически deploy-outputs.sh по hostname
-
-spawn-at-startup "swaybg" "-o" "DP-2" "-i" "/home/amar/Amar73/arch-niri/Wallpapers/arch.jpeg" "-m" "fill" "-o" "DP-3" "-i" "/home/amar/Amar73/arch-niri/Wallpapers/arch3.jpeg" "-m" "fill" "-o" "DP-4" "-i" "/home/amar/Amar73/arch-niri/Wallpapers/wallpaper.jpg" "-m" "fill"
+spawn-at-startup "/home/amar/.local/bin/set-wallpapers"

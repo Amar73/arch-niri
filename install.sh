@@ -54,7 +54,8 @@ install_official_packages() {
     ttf-jetbrains-mono-nerd \
     adw-gtk-theme papirus-icon-theme \
     xwayland-satellite \
-    keychain openssh
+    keychain openssh \
+    numlockx
 }
 
 enable_system_services() {
@@ -148,6 +149,10 @@ deploy_files() {
   # Деплой конфига мониторов по hostname
   log "Деплой конфига мониторов"
   bash "${ROOT_DIR}/deploy-outputs.sh"
+
+  # set-wallpapers wrapper
+  mkdir -p "${HOME}/.local/bin"
+  install -m 755 "${ROOT_DIR}/files/home/.local/bin/set-wallpapers" "${HOME}/.local/bin/set-wallpapers"
 
   # Деплой ssh config по контексту машины
   log "Деплой ssh config"

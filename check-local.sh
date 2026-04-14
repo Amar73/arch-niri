@@ -51,6 +51,7 @@ expected_files=(
   "home/.config/niri/conf.d/20-layout.kdl"
   "home/.config/niri/conf.d/30-environment.kdl"
   "home/.config/niri/conf.d/40-startup.kdl"
+  "home/.config/niri/conf.d/45-wallpaper.kdl"
   "home/.config/niri/conf.d/50-binds.kdl"
   "home/.config/niri/conf.d/60-outputs.kdl"
   "home/.config/niri/conf.d/keymap.xkb"
@@ -67,7 +68,6 @@ expected_files=(
   "home/.config/systemd/user/cliphist-text.service"
   "home/.config/systemd/user/cliphist-images.service"
   "home/.config/mc/ini"
-  "home/.config/mc/skins/catppuccin-mocha.ini"
 )
 
 for rel in "${expected_files[@]}"; do

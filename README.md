@@ -381,9 +381,9 @@ Wallpapers/
 Сменить обои вручную (без перезапуска niri):
 ```bash
 pkill swaybg
-swaybg -o DP-2 -i ~/Amar73/arch-niri/Wallpapers/arch.jpeg -m fill &
-swaybg -o DP-3 -i ~/Amar73/arch-niri/Wallpapers/arch3.jpeg -m fill &
-swaybg -o DP-4 -i ~/Amar73/arch-niri/Wallpapers/wallpaper.jpg -m fill &
+swaybg -o DP-2 -i ~/Amar73/arch-niri/Wallpapers/arch.jpeg    -m fill \\
+       -o DP-3 -i ~/Amar73/arch-niri/Wallpapers/arch3.jpeg   -m fill \\
+       -o DP-4 -i ~/Amar73/arch-niri/Wallpapers/wallpaper.jpg -m fill &
 ```
 
 Добавить обои для новой машины:
@@ -402,7 +402,7 @@ make outputs       # задеплоить
 
 | Время простоя | Действие |
 |---------------|----------|
-| 30 мин 1800 с) | Блокировка экрана через `swaylock -f` |
+| 30 мин (1800 с) | Блокировка экрана через `swaylock -f` |
 | 10 мин (600 с) | Выключить мониторы через `niri msg action power-off-monitors` |
 | При засыпании | Блокировка перед сном (`before-sleep`) |
 
@@ -426,7 +426,6 @@ pgrep -a swayidle
 
 Файлы в репо:
 - `files/home/.config/mc/ini` — основной конфиг (скин, редактор, панели)
-- `files/home/.config/mc/skins/catppuccin-mocha.ini` — тема Catppuccin Mocha
 
 Если рамки панелей не отображаются (символы псевдографики) — проверь `TERM`:
 
@@ -436,11 +435,7 @@ echo $TERM   # должно быть xterm-256color
 
 `TERM=xterm-256color` прописан в `30-environment.kdl` и применяется автоматически.
 
-Сменить скин вручную — **F9 → Настройки → Внешний вид** или:
-
-```bash
-mc --skin=catppuccin-mocha
-```
+Сменить скин — **F9 → Настройки → Внешний вид**.
 
 Доступные встроенные скины:
 
@@ -834,9 +829,7 @@ arch-niri/
             ├── mako/config                 — уведомления
             ├── fuzzel/fuzzel.ini           — лончер
             ├── mc/
-            │   ├── ini                     — основной конфиг mc
-            │   └── skins/
-            │       └── catppuccin-mocha.ini — тема Catppuccin Mocha
+            │   └── ini                     — основной конфиг mc (скин: nicedark)
             ├── qt6ct/qt6ct.conf            — Qt6 тема/шрифты
             ├── gtk-3.0/settings.ini        — GTK3 тема/иконки/курсор
             ├── gtk-4.0/settings.ini        — GTK4 тема/иконки/курсор

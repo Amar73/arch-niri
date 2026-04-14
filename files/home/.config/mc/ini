@@ -1,5 +1,5 @@
 [Midnight-Commander]
-skin=catppuccin-mocha
+skin=nicedark
 use_internal_edit=true
 editor_tab_spacing=4
 editor_word_wrap_line_length=80
@@ -20,4 +20,4 @@ panel_is_panelized_right=false
 mouse_move_pages=true
 
 [Colors]
-skin=catppuccin-mocha
+skin=nicedark

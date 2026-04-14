@@ -1,3 +1,4 @@
+spawn-at-startup "numlockx" "on"
 spawn-at-startup "mako"
 spawn-at-startup "waybar"
 spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
@@ -6,5 +7,5 @@ spawn-at-startup "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1"
 // Запуск через systemd user service не работает при dbus-run-session niri
 // (переменные Wayland не импортируются в systemd user instance).
 //
-// Таймауты: 300с — блокировка, 600с — выключить мониторы
-spawn-at-startup "swayidle" "-w" "timeout" "300" "swaylock -f" "timeout" "600" "niri msg action power-off-monitors" "before-sleep" "swaylock -f"
+// Таймауты: 1800с (30 мин) — блокировка, 600с — выключить мониторы
+spawn-at-startup "swayidle" "-w" "timeout" "1800" "swaylock -f" "timeout" "600" "niri msg action power-off-monitors" "before-sleep" "swaylock -f"

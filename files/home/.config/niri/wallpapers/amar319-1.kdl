@@ -1,4 +1,3 @@
-// Обои для amar319-1 — 1 монитор (DVI-I-2, Apple Cinema HD)
+// Обои — запуск через wrapper-скрипт ~/.local/bin/set-wallpapers
 // Деплоится автоматически deploy-outputs.sh по hostname
-
-spawn-at-startup "swaybg" "-o" "DVI-I-2" "-i" "/home/amar/Amar73/arch-niri/Wallpapers/wallpaper.jpg" "-m" "fill"
+spawn-at-startup "/home/amar/.local/bin/set-wallpapers"

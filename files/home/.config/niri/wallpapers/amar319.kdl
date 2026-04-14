@@ -1,5 +1,4 @@
-// Обои для amar319 — 2 монитора (DVI-I-1, HDMI-A-1)
+// Обои для amar319 — один процесс swaybg, два выхода
 // Деплоится автоматически deploy-outputs.sh по hostname
 
-spawn-at-startup "swaybg" "-o" "DVI-I-1" "-i" "/home/amar/Amar73/arch-niri/Wallpapers/arch.jpeg"    "-m" "fill"
-spawn-at-startup "swaybg" "-o" "HDMI-A-1" "-i" "/home/amar/Amar73/arch-niri/Wallpapers/arch3.jpeg"  "-m" "fill"
+spawn-at-startup "swaybg" "-o" "DVI-I-1" "-i" "/home/amar/Amar73/arch-niri/Wallpapers/arch.jpeg" "-m" "fill" "-o" "HDMI-A-1" "-i" "/home/amar/Amar73/arch-niri/Wallpapers/arch3.jpeg" "-m" "fill"

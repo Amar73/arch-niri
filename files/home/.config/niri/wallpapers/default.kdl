@@ -1,4 +1,3 @@
-// Обои по умолчанию — ноутбуки и неизвестные хосты
+// Обои — запуск через wrapper-скрипт ~/.local/bin/set-wallpapers
 // Деплоится автоматически deploy-outputs.sh по hostname
-
-spawn-at-startup "swaybg" "-i" "/home/amar/Amar73/arch-niri/Wallpapers/arch.jpeg" "-m" "fill"
+spawn-at-startup "/home/amar/.local/bin/set-wallpapers"

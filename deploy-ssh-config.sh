@@ -80,8 +80,9 @@ GITHUB_BLOCK="Host github.com
 # Блок wn75 — зависит от контекста
 if [[ "$CONTEXT" == "jump_host" ]]; then
     # Мы НА amar224 — ProxyJump через себя невозможен, коннектим напрямую
+    # IP-адреса берутся из /etc/hosts
     WN75_BLOCK="Host wn75
-    HostName 144.206.234.176
+    HostName wn75
     User root
     IdentityFile ~/.ssh/id_ed25519
     AddKeysToAgent yes"
@@ -96,14 +97,15 @@ fi
 # Остальные блоки одинаковые для всех домашних машин
 if [[ "$CONTEXT" == "jump_host" ]]; then
     # На amar224 не нужен блок самого себя
-    # wn75, ui, archminio — прямые подключения (ProxyJump через себя невозможен)
+    # wn75, ui — прямые подключения (ProxyJump через себя невозможен)
+    # IP-адреса берутся из /etc/hosts
     COMMON_BLOCKS="Host arch03 arch04 arch05
     HostName %h
     User root
     ProxyJump wn75
 
 Host ui
-    HostName 144.206.226.197
+    HostName ui
     User amar
     Port 7890
 
@@ -200,7 +202,7 @@ if ssh -G github.com >/dev/null 2>&1; then
     ok "ssh config задеплоен и валиден"
     log "Контекст: $CONTEXT"
     if [[ "$CONTEXT" == "jump_host" ]]; then
-        log "wn75 → прямое подключение (144.206.234.176)"
+        log "wn75 → прямое подключение (из /etc/hosts)"
     else
         log "wn75 → через ProxyJump amar224"
     fi
