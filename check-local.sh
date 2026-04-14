@@ -68,6 +68,7 @@ expected_files=(
   "home/.config/systemd/user/cliphist-text.service"
   "home/.config/systemd/user/cliphist-images.service"
   "home/.config/mc/ini"
+  "home/.local/bin/set-wallpapers"
 )
 
 for rel in "${expected_files[@]}"; do

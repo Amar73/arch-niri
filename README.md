@@ -774,6 +774,30 @@ ssh -G amar224
 
 ---
 
+## Что изменилось после v6.3
+
+### Исправлено
+
+- `deploy-ssh-config.sh` — убраны хардкоженные IP wn75/ui, хосты берутся из `/etc/hosts`
+- `wallpapers/amar319.kdl` — два отдельных `spawn-at-startup` → один процесс swaybg с двумя `-o`
+- `45-wallpaper.kdl` добавлен в `config.kdl` (include отсутствовал на машинах после апрельского деплоя)
+- `deploy-outputs.sh` — убран `pkill swaybg` (ломал обои при ручном деплое)
+- `post-install-check.sh` — исправлен парсер `keyboard-layouts` под новый JSON-формат niri
+- `mc/ini` — скин изменён на `nicedark` (catppuccin-mocha отсутствовал на машинах при первом запуске)
+
+### Новое
+
+| Компонент | Описание |
+|-----------|----------|
+| `numlockx` | NumLock при старте через `spawn-at-startup "numlockx" "on"` |
+| `swayidle` таймаут | Блокировка 300с → 1800с (30 мин), мониторы 600с |
+| `wallpapers/*.kdl` | Per-output обои: один процесс swaybg с несколькими `-o` |
+| `files/home/.local/bin/set-wallpapers` | Wrapper для amar224 (3 монитора DP-2/3/4) |
+| `deploy-outputs.sh` | Деплоит и мониторы, и обои по hostname |
+| `sync.sh` | Деплой `set-wallpapers` при `make sync` |
+
+---
+
 ## Структура репозитория
 
 ```
@@ -800,6 +824,9 @@ arch-niri/
     └── home/
         ├── .bashrc                 — bash: PS1, алиасы, keychain, git-функции
         ├── .ssh/config             — SSH с ProxyJump цепочками
+        ├── .local/
+        │   └── bin/
+        │       └── set-wallpapers        — wrapper запуска swaybg (amar224)
         └── .config/
             ├── niri/
             │   ├── config.kdl      — главный конфиг (include conf.d)
