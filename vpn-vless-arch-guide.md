@@ -517,11 +517,11 @@ sudo systemctl restart xray
       "settings": {
         "vnext": [
           {
-            "address": "144.31.81.96",
+            "address": "YOUR_SERVER_IP",
             "port": 443,
             "users": [
               {
-                "id": "5a3dfaf7-eea4-4b78-bc4a-7a8d8997c40f",
+                "id": "YOUR_UUID",
                 "encryption": "none",
                 "flow": "xtls-rprx-vision"
               }
@@ -535,8 +535,8 @@ sudo systemctl restart xray
         "realitySettings": {
           "serverName": "www.cloudflare.com",
           "fingerprint": "chrome",
-          "publicKey": "j5TZ4DGRsfoEAZ9Da_mk0nOLw0odhYMZwTluKGT3cwg",
-          "shortId": "2022836a594c7a"
+          "publicKey": "YOUR_PUBLIC_KEY",
+          "shortId": "YOUR_SHORT_ID"
         }
       }
     },
