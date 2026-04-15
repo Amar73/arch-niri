@@ -12,3 +12,4 @@ error.log
 
 # Бэкап-директории (создаются backup.sh)
 backup/
+files/home/.config/alacritty/themes/
