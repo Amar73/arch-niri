@@ -299,7 +299,7 @@ make packages
 | Hostname | Контекст | wn75 подключается через |
 |----------|----------|------------------------|
 | `amar224` | jump_host | напрямую (из /etc/hosts) |
-| `amar319`, `amar319-1`, ноутбуки | home_net | ProxyJump amar224 |
+| `amar319`, `amar319-1`, ноутбуки | home_net | напрямую (из /etc/hosts) |
 | всё остальное | external | конфиг не трогается |
 
 ```bash

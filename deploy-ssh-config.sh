@@ -87,11 +87,13 @@ if [[ "$CONTEXT" == "jump_host" ]]; then
     IdentityFile ~/.ssh/id_ed25519
     AddKeysToAgent yes"
 else
-    # Мы на другой домашней машине — идём через amar224
+    # Мы на домашней машине — wn75 и ui доступны напрямую (как и с amar224)
+    # HostName берётся из /etc/hosts — IP не прописывается
     WN75_BLOCK="Host wn75
     HostName wn75
     User root
-    ProxyJump amar224"
+    IdentityFile ~/.ssh/id_ed25519
+    AddKeysToAgent yes"
 fi
 
 # Остальные блоки одинаковые для всех домашних машин
@@ -139,7 +141,6 @@ Host ui
     HostName ui
     User amar
     Port 7890
-    ProxyJump amar224
 
 Host archminio01 archminio02
     HostName %h
@@ -204,7 +205,7 @@ if ssh -G github.com >/dev/null 2>&1; then
     if [[ "$CONTEXT" == "jump_host" ]]; then
         log "wn75 → прямое подключение (из /etc/hosts)"
     else
-        log "wn75 → через ProxyJump amar224"
+        log "wn75, ui → напрямую (из /etc/hosts)"
     fi
 else
     warn "ssh config не прошёл валидацию — проверь вручную"
